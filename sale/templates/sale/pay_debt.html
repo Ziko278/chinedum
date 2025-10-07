@@ -1,0 +1,314 @@
+{% extends 'admin_layout.html' %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'page_name' %} {{ debtor_type }} <div style="float:right">
+
+</div>
+{%endblock %}
+{% block 'sub_page_name' %} Pay Debt {%endblock %}
+{% block 'main_content' %}
+{% if debtor_type == 'customer' %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+            <div class="panel-body">
+                <div class="col-lg-2 col-sm-2">
+                    <h4>{{ customer.full_name|title }}</h4>
+                    <div class="follow-ava">
+                        <img {% if customer.image %} src="/media/{{ customer.image }}" {% else %} src="{% static 'images/default_image.jpg' %}" {% endif %} alt="">
+                    </div>
+                    <h6>{{ customer.status }}</h6>
+                </div>
+                <div class="col-lg-4 col-sm-4 follow-info">
+                    <p><i class="fa fa-shopping-cart"></i> {{ customer.full_name }}</p>
+                    <p><i class="icon_pin_alt"></i> {% if customer.residential_address %} {{ customer.residential_address }} {% else %} Address Not Given {% endif %}</p>
+                    <p><i class="fa fa-phone"></i><a href="tel:{{ customer.mobile}}" style='color:white'> {% if customer.mobile %} {{ customer.mobile }} {% else %} Phone Number Not Given {% endif %}</a></p>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>CREDIT OWED</b></span>
+                            <i class="fa fa-comments fa-2x"> </i><br>N {{ customer.balance }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b> CRATE OWED</b></span>
+                            <i class="fa fa-bell fa-2x"> </i><br> {{ customer.crate_balance }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>REGISTRATION</b></span>
+                            <i class="fa fa-tachometer fa-2x"> </i><br>   {{ customer.created_at|date }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading tab-bg-info">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#recent-activity">
+                            <i class="icon-home"></i>Debt Payment
+                        </a>
+                  </li>
+                </ul>
+            </header>
+
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div id="recent-activity" class="tab-pane active">
+                        <section class="panel">
+                            <div class="col-lg-12">
+                                <div class="modal-body">
+                                    <div class="activity-body act-in">
+                                        <form action="" method="POST">
+                                        {% csrf_token %}
+                                            <div class="table-responsive">
+                                                <div class="form-group col-md-4">
+                                                    <label for="customer-search"><b>Credit Balance</b> </label>
+                                                    <input type="number" autocomplete=off min="0" max="{{ customer.balance }}" class="form-control col-lg-6" id="customer_search" name="cash_balance" placeholder="Enter amount to pay">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="customer-detail"><b>Crate Balance</b></label>
+                                                    <input type="number" min="0" max="{{ customer.crate_balance }}"  class="form-control" id="customer-detail" name='crate_balance' autocomplete=off placeholder="Enter Crate to refund">
+                                                    <input type="hidden" id="client-type" name="debtor_type" value="customer" />
+                                                    <input type="hidden" id="customer" name="debtor" value="{{ customer.id }}">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <br />
+                                                    <button class="btn btn-primary">Proceed with Refund</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% elif debtor_type == 'sale_rep' %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+            <div class="panel-body">
+                <div class="col-lg-2 col-sm-2">
+                    <h4>{{ customer.full_name|title }}</h4>
+                    <div class="follow-ava">
+                        <img {% if customer.image %} src="/media/{{ customer.image }}" {% else %} src="{% static 'images/default_image.jpg' %}" {% endif %} alt="">
+                    </div>
+                    <h6>{{ customer.status }}</h6>
+                </div>
+                <div class="col-lg-4 col-sm-4 follow-info">
+                    <p><i class="fa fa-shopping-cart"></i> {{ customer.full_name }}</p>
+                    <p><i class="icon_pin_alt"></i> {% if customer.residential_address %} {{ customer.residential_address }} {% else %} Address Not Given {% endif %}</p>
+                    <p><i class="fa fa-phone"></i><a href="tel:{{ customer.mobile}}" style='color:white'> {% if customer.mobile %} {{ customer.mobile }} {% else %} Phone Number Not Given {% endif %}</a></p>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>CREDIT OWED</b></span>
+                            <i class="fa fa-comments fa-2x"> </i><br>N {{ customer.credit }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b> CRATE OWED</b></span>
+                            <i class="fa fa-bell fa-2x"> </i><br> {{ customer.crate_credit }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>REGISTRATION</b></span>
+                            <i class="fa fa-tachometer fa-2x"> </i><br>   {{ customer.created_at|date }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading tab-bg-info">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#recent-activity">
+                            <i class="icon-home"></i>Debt Payment
+                        </a>
+                  </li>
+                </ul>
+            </header>
+
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div id="recent-activity" class="tab-pane active">
+                        <section class="panel">
+                            <div class="col-lg-12">
+                                <div class="modal-body">
+                                    <div class="activity-body act-in">
+                                        <form action="" method="POST">
+                                        {% csrf_token %}
+                                            <div class="table-responsive">
+                                                <div class="form-group col-md-4">
+                                                    <label for="customer-search"><b>Credit Balance</b> </label><span id='clear-customer' style='font-size:20px;float:right;color:red'><b><i style='font-size:25px' class='fa fa-close'></i></b></span>
+                                                    <input type="number" autocomplete=off min="0" max="{{ customer.credit }}" class="form-control col-lg-6" id="customer_search" name="cash_balance" placeholder="Enter amount to pay">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="customer-detail"><b>Crate Balance</b></label>
+                                                    <input type="number" min="0" max="{{ customer.crate_credit }}"  class="form-control" id="customer-detail" name='crate_balance'autocomplete=off placeholder="Enter Crate to refund">
+                                                    <input type="hidden" id="client-type" name="debtor_type" value="sale_rep" />
+                                                    <input type="hidden" id="customer" name="debtor" value="{{ customer.id }}">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <br />
+                                                    <button class="btn btn-primary">Proceed with Refund</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% else %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+            <div class="panel-body">
+                <div class="col-lg-2 col-sm-2">
+                    <h4>{% if customer.client_detail %} {{ customer.client_detail|title }} {% else %} Ananymous {% endif %}</h4>
+                    <div class="follow-ava">
+                        <img {% if customer.image %} src="/media/{{ customer.image }}" {% else %} src="{% static 'images/default_image.jpg' %}" {% endif %} alt="">
+                    </div>
+                    <h6>{{ customer.status }}</h6>
+                </div>
+                <div class="col-lg-4 col-sm-4 follow-info">
+                    <p><i class="fa fa-shopping-cart"></i> {{ customer.full_name }}</p>
+                    <p><i class="icon_pin_alt"></i> {% if customer.residential_address %} {{ customer.residential_address }} {% else %} Address Not Given {% endif %}</p>
+                    <p><i class="fa fa-phone"></i><a href="tel:{{ customer.mobile}}" style='color:white'> {% if customer.mobile %} {{ customer.mobile }} {% else %} Phone Number Not Given {% endif %}</a></p>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>CREDIT OWED</b></span>
+                            <i class="fa fa-comments fa-2x"> </i><br>N {{ customer }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b> CRATE OWED</b></span>
+                            <i class="fa fa-bell fa-2x"> </i><br> {{ customer.crate_owed }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>PURCHASE DATE</b></span>
+                            <i class="fa fa-tachometer fa-2x"> </i><br>   {{ customer.created_at|date }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading tab-bg-info">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#recent-activity">
+                            <i class="icon-home"></i>Debt Payment
+                        </a>
+                  </li>
+                </ul>
+            </header>
+
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div id="recent-activity" class="tab-pane active">
+                        <section class="panel">
+                            <div class="col-lg-12">
+                                <div class="modal-body">
+                                    <div class="activity-body act-in">
+                                        <form action="" method="POST">
+                                        {% csrf_token %}
+                                            <div class="table-responsive">
+                                                <div class="form-group col-md-4">
+                                                    <label for="customer-search"><b>Credit Balance</b> </label><span id='clear-customer' style='font-size:20px;float:right;color:red'><b><i style='font-size:25px' class='fa fa-close'></i></b></span>
+                                                    <input type="number" autocomplete=off min="0" max="{{ customer.current_balance }}" class="form-control col-lg-6" id="customer_search" name="cash_balance" placeholder="Enter amount to pay">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="customer-detail"><b>Crate Balance</b></label>
+                                                    <input type="number" min="0" max="{{ customer.crate_owed }}"  class="form-control" id="customer-detail" name='crate_balance'autocomplete=off placeholder="Enter Crate to refund">
+                                                    <input type="hidden" id="client-type" name="debtor_type" value="guest" />
+                                                    <input type="hidden" id="debtor" name="debtor" value="{{ customer.sale_id }}">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <br />
+                                                    <button class="btn btn-primary">Proceed with Refund</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+{% endif %}
+
+<script src="{% static 'scripts/jquery.js' %}"></script>
+<script type='text/javascript'>
+	$(document).ready(function(){
+		setTimeout(function(){
+			$('.text-error').fadeOut('slow')
+		}, 5000)
+	})
+</script>
+
+{%endblock %}

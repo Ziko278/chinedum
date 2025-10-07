@@ -1,0 +1,56 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Expense {%endblock %}
+{% block 'sub_page_name' %} List {%endblock %}
+{% block 'main_content' %}
+{% load static %}
+<div style='margin:20px;margin-top:0px;background:lightgrey;height:45px;border-radius:5px;padding:10px 50px;color:white'>
+		<a href="{% url 'expense_create' %}" class='btn btn-info' style='height:30px;float:right'><i class='fa fa-plus'></i> Expense</a>
+
+	</div>
+	<div class="col-sm-12 col-md-12 col-lg-12">
+            <section class="panel">
+              <header class="panel-heading text-center">
+                <h3 class='text-center'><b>ALL EXPENSES</b></h3>
+              </header>
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Type</th>
+                    <th>Amount (N)</th>
+                      <th>Category</th>
+                      <th>Date</th>
+                      <th>Recorded By</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id='staff'>
+                  {% if expense_list %}
+                  {% for expense in expense_list %}
+					<tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ expense.type|title }}</td>
+					<td>{{ expense.amount }}</td>
+                        <td>{{ expense.flow|title }}</td>
+                        <td>{{ expense.created_at|date }}</td>
+                        <td>{{ expense.created_by|title }}</td>
+					<td style=''>
+                    <a style="width:100px;height:100px;display:inline;margin-right:5px;" href="{% url 'expense_detail' expense.id %}" class='btn btn-primary'> View </a>
+                    </td>
+					</tr>
+
+                  {% endfor %}
+                  {% else %}
+						<tr><td colspan=6><h1 class='text-center'>NO EXPENSE REGISTERED YET</h1></td></tr>
+                  {% endif %}
+
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+<script src="http://localhost/alyaqeen/public/js/jquery.js"></script>
+
+
+
+{% endblock %}

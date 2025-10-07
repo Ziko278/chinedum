@@ -1,0 +1,25 @@
+{% extends 'admin_layout.html' %}
+{% load static %}
+{% block 'page_name' %} Staff {%endblock %}
+{% block 'sub_page_name' %} Delete {%endblock %}
+{% block 'main_content' %}
+<div class="page-header">
+    <h3 class="page-title"> STAFF INFORMATION:  {{ staff.full_name|title }}  </h3>
+</div>
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Are you sure you want to delete <i>"{{ staff.full_name|title }}"</i> as a staff? <img style="display:inline;width:100px;height:100px;border-radius:5px;" {% if staff.image %} src="/media/{{ staff.image }}" {% else %} src="{% static 'images/default_image.jpg' %}" {% endif %} /></h4>
+            <p>If you delete a staff, data regarding that staff may be lost</p>
+
+            <form style="display:inline" method="post">
+                {% csrf_token %}
+                <button class="btn btn-success">Proceed</button>
+            </form>
+            <a class="btn btn-danger" href="{% url 'staff_detail' staff.id %}"> Cancel</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

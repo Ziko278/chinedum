@@ -1,0 +1,501 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Sale {%endblock %}
+{% block 'sub_page_name' %} Create {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'main_content' %}
+
+<style>
+	.customer-list li{
+		width:300px;
+		border:1px solid black;
+		margin:2px;
+		padding:2px;
+		border-radius:5px;
+		color:white;
+		background:grey;
+	}
+
+	.customer-list li:hover{
+		background:black;
+	}
+
+.search-result{
+	position:absolute;z-index:1000;
+	background:white;
+	min-width:200px;
+	padding:10px;
+	border:1px solid black;
+	left:50px;
+	border-radius:10px;
+	display:none;
+}
+.search-result li{
+	width:100%;
+	height:30px;
+	padding-left:10px;
+	border:1px solid grey;
+	margin-bottom:1px;
+}
+.search-result li:hover{
+	background:grey;
+	color:white;
+}
+</style>
+<link href="../../../css/font-awesome.min.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading text-center">
+                <h3><b>Make a Sale</b></h3>
+            </header><br>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <div class="form-group col-md-4">
+                        <label for="customer-search">Search Customer </label><span id='clear-customer' style='font-size:20px;float:right;color:red'><b><i style='font-size:25px' class='fa fa-close'></i></b></span>
+                        <input type="hidden" id="customer_list" value="{{ customer_list }}">
+                        <input type="hidden" name="user" value="{{ layout_user.id }}">
+                        <input type="hidden" id="serialized_inventory_list" value="{{ serialized_inventory_list }}">
+                        <input type="text" autocomplete=off value="" class="form-control col-lg-6" id="customer_search" placeholder="Enter a Customer Name">
+						<b><ul style='position:absolute;top:70px;left:-20px' class='customer-list' id='customer-list'></ul></b>
+					</div>
+                    <div class="form-group col-md-5">
+                        <label for="customer-detail">Customer Detail</label>
+                        <input type="text" value=""  class="form-control" id="customer-detail" name='customer_detail' placeholder="">
+                        <input type="hidden" id="client-type" name="client_type" value="guest" />
+                        <input type="hidden" id="customer" name="customer" value="">
+                    </div>
+					<div class="form-group col-md-3">
+                        <label for="customer-balance"><b>Previous Balance</b></label>
+                        <input type="text"  value=""  class="form-control" id="prev-balance" name='prev_balance' readonly placeholder="">
+                    </div>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class='text-center'>Product</th>
+                      <th class='text-center'>Qty remaining</th>
+                      <th class='text-center'>Selling Price (N)</th>
+                      <th class='text-center'>Quantity</th>
+					  <th class='text-center'>Crate B</th>
+					  <th class='text-center'>Crate R</th>
+                      <th class='text-center'>Price (N)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+					<tr class='blank_row'><td></td></tr>
+                    <tr class='product_row' id='sale_row1' row=1>
+                        <td><a id='1' class='remove_sale_row' href='#' style='display:inline;color:red;background:white;height:40px;'><i style='font-size:25px' class='fa fa-close'></i></a>
+							<input autocomplete=off class="form-control m-bot15 product-name-input" type='text' style='display:inline;width:80%;' name='product_name[]' id='product-name1' row=1 />
+							<input type='hidden' name='product_id[]' id='product-id1' /><br>
+							<ul style='' class='search-result' id='result1'></ul>
+                      </td>
+							<td><p class='text-center' id='quantity_remaining1' row=1></p>
+							<input type='hidden' name='quantity_remaining[]' />
+					  </td>
+
+
+                      <td>
+						<div class="form-group col-md-4 text-center" style='align:center'>
+								<input id='selling_price1' style='width:100px;display:none' row='1' type='number' class='one form-control col-lg-6'  name='selling_price[]' placeholder=''>
+						</div>
+					  </td>
+                      <td class='text-center'>
+							<div class="form-group col-md-4 text-center" style='align:center'>
+								<input id='quantity_input1' step=".01" style='width:100px;display:none' min=0 row='1' type='number' class='one form-control col-lg-6'  name='quantity_input[]' placeholder=''>
+							</div>
+						</td>
+						<td class='text-center'>
+							<div class="form-group col-md-4 text-center" style='align:center'>
+								<input id='crate_brought1' step=".01" style='width:100px;display:none' row=1  type='number' class='one form-control col-lg-6'  name='crate_brought[]' placeholder=''>
+							</div>
+						</td>
+						<td class='text-center'>
+							<div class="form-group col-md-4 text-center" style='align:center'>
+							<input id='crate_remaining1' style='width:100px;display:none' row=1  type='number' class='form-control col-lg-6' readonly='true' name='crate_remaining[]' placeholder=''>
+
+							</div>
+						</td>
+                      <td><p class='text-center total_price' id='total_price1' row=1></p>
+						<input type='hidden' name='total_price[]' />
+					  </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+				<div class="form-group col-md-3">
+                        <label for="grand-total">Grand Total (N)</label>
+                        <input type="text" class="form-control col-lg-6" readonly id="grand_total" name='grand_total' placeholder="">
+
+					</div>
+                    <div class="form-group col-md-3">
+                        <label for="amount-paid">Amount Paid (N)</label>
+                        <input type="number" class="form-control"  id="amount_paid" name='amount_paid' min="0" placeholder="">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label for="amount-paid">Transfer Made (N)</label>
+                        <input type="number" class="form-control"  id="transfer_paid" value="0" min="0" name='transfer_paid' placeholder="">
+                    </div>
+
+					<div class="form-group col-md-3">
+                        <label for="balance">Current Balance (N)</label>
+                        <input type="number" readonly class="form-control col-lg-6" value="" id="balance" name='balance' placeholder="">
+                    </div>
+
+					<button type="submit" class="btn btn-primary">Make Sale</button>
+                     <button type="button" id='add_row_button' class="btn btn-info">ADD ROW</button>
+					 <a class='btn btn-danger' href="">Cancel</a>
+              </div>
+              </form>
+            </section>
+          </div>
+        </div>
+<script src="{% static 'scripts/jquery.js' %}"></script>
+<script type='text/javascript'>
+	$(document).on('ready', function(){
+
+	    $('#inventory_detail_div').hide()
+        customer_list = $('#customer_list').val()
+        customer_list = JSON.parse(customer_list)
+        customer_name_list = {}
+        for(const key in customer_list){
+            customer_name_list[customer_list[key]['pk']] = customer_list[key]['fields']['full_name']
+            customer_name_list[customer_list[key]['pk']] = customer_name_list[customer_list[key]['pk']].toLowerCase()
+        }
+
+        serialized_inventory_list = $('#serialized_inventory_list').val()
+        serialized_inventory_list = JSON.parse(serialized_inventory_list)
+        serialized_inventory_name_list = {}
+        for(const key in serialized_inventory_list){
+            serialized_inventory_name_list[serialized_inventory_list[key]['pk']] = serialized_inventory_list[key]['fields']['name']
+            serialized_inventory_name_list[serialized_inventory_list[key]['pk']] = serialized_inventory_name_list[serialized_inventory_list[key]['pk']].toLowerCase()
+        }
+
+
+        $('#customer_search').keyup(function(){
+            customer_detail_list = ''
+            search_value = $(this).val().toLowerCase()
+            search_value_array = search_value.split(" ")
+
+            if(search_value==''){
+                $('#parent_detail_div').fadeOut()
+            }else{
+                for(const key in customer_name_list){
+                    customer_search_result = true
+                    for(const search_key in search_value_array){
+                        if(!customer_name_list[key].includes(search_value_array[search_key])){
+                            customer_search_result = false
+                        }
+                    }
+                    if(customer_search_result==true){
+                        customer_detail_list += "<li style='display:block;margin-bottom:2px;' class='btn btn-info select_customer' customer_id="+key+">"+ customer_name_list[key].toUpperCase() +"</li>"
+                    }
+                }
+            }
+
+            $('#customer-list').html(customer_detail_list)
+        })
+
+        $(document).on('click','.select_customer', function(){
+            $('#client-type').val('customer')
+
+            customer_id = $(this).attr('customer_id')
+            customer_fullname = customer_name_list[customer_id]
+            $('#customer_fullname').text(customer_fullname.toUpperCase())
+
+            for(const key in customer_list){
+                if(customer_list[key]['pk'] == customer_id){
+                    customer_full_detail = customer_list[key]['fields']
+                }
+            }
+
+            customer_mobile = customer_full_detail['mobile']
+            if(customer_mobile == null){
+                customer_mobile = 'Mobile Not Provided'
+            }
+            $('#customer-detail').val(customer_fullname.toUpperCase())
+
+            customer_previous_balance = customer_full_detail['balance']
+            $('#prev-balance').val(customer_previous_balance)
+            $('#customer').val(customer_id)
+        })
+
+        $(document).on('keyup', '.product-name-input', function() {
+            row=$(this).attr('row')
+            inventory_detail_list = ''
+            search_value = $(this).val().toLowerCase()
+            search_value_array = search_value.split(" ")
+
+            if(search_value==''){
+                $('#result'+row).slideUp('fast')
+            }else{
+                for(const key in serialized_inventory_name_list){
+                    inventory_search_result = true
+                    for(const search_key in search_value_array){
+                        if(!serialized_inventory_name_list[key].includes(search_value_array[search_key])){
+                            inventory_search_result = false
+                        }
+                    }
+                    if(inventory_search_result==true){
+                        inventory_detail_list += "<li class='btn result-item' row=" + row + " id=" + key +"><b>" + serialized_inventory_name_list[key].toUpperCase() +"</b></li>";
+                    }
+                }
+            }
+
+            $('#result'+row).html(inventory_detail_list)
+			$('#result'+row).slideDown('fast')
+			totalAmount()
+        })
+
+
+        $(document).on('click', '.result-item', function() {
+			row=$(this).attr('row')
+			product_name=$(this).text()
+			if(product_name==''){
+				$('#quantity_remaining'+row).fadeOut()
+				$('#selling_price'+row).fadeOut()
+				$('#quantity_input'+row).fadeOut()
+				totalAmount()
+			}else{
+				id=$(this).attr('id')
+				for(const key in serialized_inventory_list){
+                    if(serialized_inventory_list[key]['pk'] == id){
+                        inventory_name = serialized_inventory_list[key]['fields']['name']
+                        selling_price = serialized_inventory_list[key]['fields']['selling_price']
+                        quantity_left = serialized_inventory_list[key]['fields']['quantity_left']
+                    }
+                }
+
+                $('#quantity_remaining'+row).text(quantity_left)
+                $('#selling_price'+row).val(selling_price)
+                $('#quantity_input'+row).fadeIn()
+                $('#quantity_input'+row).val('')
+                $('#quantity_input'+row).attr('max',quantity_left)
+                $('#quantity_input'+row).attr('min',0)
+                $('#quantity_input'+row).attr('required',true)
+                $('#selling_price'+row).attr('required',true)
+                $('#total_price'+row).text(0)
+				$('#quantity_input'+row).attr('price',selling_price)
+				$('#selling_price'+row).fadeIn()
+				$('#quantity_remaining'+row).fadeIn()
+				$('#crate_brought'+row).val('')
+				$('#crate_remaining'+row).val('')
+				$('#crate_brought'+row).fadeIn()
+				$('#crate_remaining'+row).fadeIn()
+				$('#product-name'+row).val(product_name)
+				$('#product-id'+row).val(id)
+				$('#product-name'+row).attr('readonly',true)
+				$('#result'+row).slideUp('fast')
+				totalAmount()
+
+                amount_paid=$('#amount_paid').val()
+                total_amount=$('#grand_total').val()
+                balance=parseInt(total_amount)-parseInt(amount_paid)
+				prev_balance = $('#prev-balance').val()
+				total_balance=balance+parseInt(prev_balance)
+				$('#total-balance').val(total_balance)
+
+            }
+
+			quantity_input=$('#quantity_input'+row).val()
+			total_price=selling_price*quantity_input
+			$('#total_price'+row).text(total_price)
+
+			$(document).on('keyup','#quantity_input'+row,function() {
+			    row=$(this).attr('row')
+			    quantity_input=$(this).val()
+			    item_price=$('#selling_price'+row).val()
+			    total_price=item_price*quantity_input
+			    $('#total_price'+row).text(total_price)
+			totalAmount()
+          	amount_paid=$('#amount_paid').val()
+		    total_amount=$('#grand_total').val()
+			$('#amount_paid').attr('max', total_amount)
+			$('#amount_paid').attr('min', 0)
+		    balance=parseInt(total_amount)-parseInt(amount_paid)
+           	$('#balance').val(balance)
+			prev_balance = $('#prev-balance').val()
+			total_balance=balance+parseInt(prev_balance)
+			$('#total-balance').val(total_balance)
+			$('#crate_brought'+row).val(quantity_input)
+			$('#crate_brought'+row).attr('max',quantity_input)
+			$('#crate_brought'+row).attr('required',true)
+			$('#crate_remaining'+row).val(0)
+
+
+
+
+
+
+
+			})
+
+			$(document).on('keyup','#selling_price'+row,function() {
+				row=$(this).attr('row')
+				quantity_input=$('#quantity_input'+row).val()
+				item_price=$(this).val()
+				total_price=item_price*quantity_input
+				$('#total_price'+row).text(total_price)
+				totalAmount()
+          		amount_paid=$('#amount_paid').val()
+		    	total_amount=$('#grand_total').val()
+				$('#amount_paid').attr('max', total_amount)
+				$('#amount_paid').attr('min', 0)
+		    	balance=parseInt(total_amount)-parseInt(amount_paid)
+           		$('#balance').val(balance)
+
+			})
+
+			$(document).on('click','.remove_sale_row',function() {
+
+			row=$(this).attr('id')
+				$('#sale_row'+row).remove()
+				totalAmount()
+				total_amount=$('#grand_total').val()
+				$('#amount_paid').attr('max', total_amount)
+			})
+
+		$(document).on('keyup','#crate_brought'+row,function() {
+			row=$(this).attr('row')
+			crate_brought=$(this).val()
+			quantity_bought=$('#quantity_input'+row).val()
+			crate_remaining=quantity_bought-crate_brought
+
+			$('#crate_remaining'+row).val(crate_remaining)
+        })
+
+
+		})
+
+	$(document).on('click', '#add_row_button',  function() {
+		previous_row=$('.product_row').last().attr('row')
+		current_row=parseInt(previous_row)+1
+		$('.product_row').last().after("<tr class='product_row' id="+'sale_row'+current_row+" row="+current_row+"><td><a id="+current_row+" class='remove_sale_row' href='#' style='display:inline;color:red;background:white;height:40px;'><i style='font-size:25px' class='fa fa-close'></i></a><input autocomplete=off class='form-control m-bot15 product-name-input' type='text' style='display:inline;width:80%;' name='product_name[]' id="+'product-name' +current_row+ " row="+current_row+" /><input type='hidden' name='product_id[]' id=" +'product-id'+current_row+" /><br><ul style='' class='search-result' id=" +'result'+current_row+"></ul></td><td><p class='text-center' id="+'quantity_remaining'+current_row+" row="+current_row+"></p><input type='hidden' name='quantity_remaining[]' /></td><td class='text-center'><input id="+'selling_price'+current_row+ " style='width:100px;display:none' row="+current_row+" type='number' class='one form-control col-lg-6'  name='selling_price[]' placeholder=''></td><td class='text-center'><div class='form-group col-md-4 text-center' style='align:center'><input id="+'quantity_input'+current_row+" row="+current_row+" style='display:none;width:100px' type='number' step='.01' class='form-control col-lg-6' id='' name='quantity_input[]' placeholder=''></div></td><td class='text-center'><div class='form-group col-md-4 text-center' style='align:center'><input id="+'crate_brought'+current_row+"  style='width:100px;display:none' row="+current_row+"   type='number' step='.01' class='form-control col-lg-6'  name='crate_brought[]' placeholder=''></div></td><td class='text-center'><div class='form-group col-md-4 text-center' style='align:center'><input id="+'crate_remaining'+current_row+" style='width:100px;display:none' row="+current_row+"  type='number' step='0.1' class='form-control col-lg-6' readonly='true' name='crate_remaining[]' placeholder=''></div></td><td><p class='text-center total_price' id="+'total_price'+current_row+" row="+current_row+"></p><input type='hidden' name='total_price[]' /></td></tr>")
+        if($('.product_row').length==0){
+            current_row=1
+			$('.blank_row').after("<tr class='product_row' id="+'sale_row'+current_row+" row="+current_row+"><td><a id="+current_row+" class='remove_sale_row' href='#' style='display:inline;color:red;background:white;height:40px;'><i style='font-size:25px' class='fa fa-close'></i></a><input autocomplete=off class='form-control m-bot15 product-name-input' type='text' style='display:inline;width:80%;' name='product_name[]' id="+'product-name' +current_row+ " row="+current_row+" /><input type='hidden' name='product_id[]' id=" +'product-id'+current_row+" /><br><ul style='' class='search-result' id=" +'result'+current_row+"></ul></td><td><p class='text-center' id="+'quantity_remaining'+current_row+" row="+current_row+"></p><input type='hidden' name='quantity_remaining[]' /></td><td><input id="+'selling_price'+current_row+ " style='width:100px;display:none' row="+current_row+" type='number' class='one form-control col-lg-6'  name='selling_price[]' placeholder=''></td><td class='text-center'><div class='form-group col-md-4 text-center' style='align:center'><input id="+'quantity_input'+current_row+" row="+current_row+" style='display:none;width:100px' type='number' step='.01' class='form-control col-lg-6' id='' name='quantity_input[]' placeholder=''></div></td><td class='text-center'><div class='form-group col-md-4 text-center' style='align:center'><input id="+'crate_brought'+current_row+"  style='width:100px;display:none' row="+current_row+"   type='number' step='.01' class='form-control col-lg-6'  name='crate_brought[]' placeholder=''></div></td><td class='text-center'><div class='form-group col-md-4 text-center' style='align:center'><input id="+'crate_remaining'+current_row+" style='width:100px;display:none' row="+current_row+"  type='number' step='0.1' class='form-control col-lg-6' readonly='true' name='crate_remaining[]' placeholder=''></div></td><td><p class='text-center total_price' id="+'total_price'+current_row+" row="+current_row+"></p><input type='hidden' name='total_price[]' /></td></tr>")
+		}
+		totalAmount()
+    	amount_paid=$('#amount_paid').val()
+		total_amount=$('#grand_total').val()
+
+		balance=parseInt(total_amount)-parseInt(amount_paid)
+    	$('#balance').val(balance)
+
+	 })
+
+    function amountPaid(){
+        $('#amount_paid').keyup(function(){
+		    amount_paid=$('#amount_paid').val()
+		    transfer_paid=$('#transfer_paid').val()
+		    total_amount=$('#grand_total').val()
+		    balance=parseInt(total_amount)-(parseInt(amount_paid) + parseInt(transfer_paid))
+		    $('#balance').val(balance)
+		    $('#total-balance').val(total_balance)
+
+            max_transfer = parseInt(total_amount) - parseInt(amount_paid)
+            $('#transfer_paid').attr('max', max_transfer)
+            $('#amount_paid').removeAttr('max')
+	    })
+
+	    $('#transfer_paid').keyup(function(){
+		    amount_paid=$('#amount_paid').val()
+		    transfer_paid=$('#transfer_paid').val()
+		    total_amount=$('#grand_total').val()
+		    balance=parseInt(total_amount)-(parseInt(amount_paid) + parseInt(transfer_paid))
+		    $('#balance').val(balance)
+		    $('#total-balance').val(total_balance)
+
+		    $('#transfer_paid').removeAttr('max')
+		    max_pay = parseInt(total_amount) - parseInt(transfer_paid)
+            $('#amount_paid').attr('max', max_pay)
+	    })
+    }
+  amountPaid()
+  totalAmount()
+
+
+
+})
+function totalAmount(){
+		/*no_of_item=$('.product-name').length
+		total_amount=0
+		for(i=0;i<no_of_item;i++){
+			j=i+1
+			current_amount=$('#total_price'+j).text()
+			if(current_amount==''){
+				continue
+			}else{
+				current_amount=parseInt(current_amount)
+				total_amount+=current_amount
+			}
+		}
+		*/
+		total_amount=0
+		$('.total_price').each(function(){
+			current_price=$(this).text()
+			current_price=parseInt(current_price)
+			total_amount=parseInt(total_amount)
+			total_amount+=current_price
+		})
+
+		$('#grand_total').val(total_amount)
+		$('#amount_paid').attr('required', true)
+
+		$('#quantity_input1').keyup(function(){
+			quantity_input=$(this).val()
+			item_price=$('#selling_price1').val()
+			total_price=item_price*quantity_input
+			$('#total_price1').text(total_price)
+			totalAmount()
+
+			$('#crate_brought1').val(quantity_input)
+			$('#crate_brought1').attr('required',true)
+			$('#crate_brought1').attr('max',quantity_input)
+			$('#crate_brought1').attr('min',0)
+			$('#crate_remaining1').val(0)
+
+			grand_total=$('#grand_total').val()
+			$('#amount_paid').attr('max',grand_total)
+			$('#amount_paid').attr('min',0)
+
+		})
+
+		$('#selling_price1').keyup(function(){
+			item_price=$(this).val()
+			quantity_input = $('#quantity_input1').val()
+			total_price=item_price*quantity_input
+			$('#total_price1').text(total_price)
+			totalAmount()
+
+			grand_total=$('#grand_total').val()
+			$('#amount_paid').attr('max',grand_total)
+			$('#amount_paid').attr('min',0)
+
+		})
+
+		$(document).on('keyup','#crate_brought1',function() {
+			row=$(this).attr('row')
+			crate_brought=$(this).val()
+			quantity_bought=$('#quantity_input1').val()
+			crate_remaining=quantity_bought-crate_brought
+
+			$('#crate_remaining1').val(crate_remaining)
+
+		})
+
+		$(document).on('click','.remove_sale_row',function() {
+  			 row=$(this).attr('id')
+	  		 $('#sale_row'+row).remove()
+	  	 totalAmount()
+   		})
+	}
+
+</script>
+
+{%endblock %}
+

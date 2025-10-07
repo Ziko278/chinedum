@@ -1,0 +1,125 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Expense Type <div style="float:right">
+    <a href="{% url 'expense_type_edit' expense_type.id %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'expense_type_delete' expense_type.id %}" class="btn btn-danger">Delete</a>
+</div>
+{%endblock %}
+{% block 'sub_page_name' %} Detail <div style="float:right"></div> {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% if messages %}
+
+
+{% endif %}
+{% block 'main_content' %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+            <div class="panel-body">
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>EXPENSE TYPE</b></span>
+                            <i class="fa fa-comments fa-2x"> </i><br> {{ expense_type.name }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-8 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>DESCRIPTION</b></span>
+                            <i class="fa fa-comments fa-2x"> </i><br> {% if expense_type.description %} {{ expense_type.description }} {% else %} Not Specified {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>TOTAL COST</b></span>
+                            <i class="fa fa-comments fa-2x"> </i> <br>
+                            N {{ total_expense }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading tab-bg-info">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#recent-activity">
+                            <i class="icon-home"></i>Expense Details
+                        </a>
+                  </li>
+                </ul>
+            </header>
+
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div id="recent-activity" class="tab-pane active">
+                        <section class="panel">
+                        <div class="col-lg-12">
+                            <div class="modal-body">
+                                <div class="activity-body act-in">
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <section class="panel">
+                                            <header class="panel-heading text-center">
+                                                <h3 class='text-center'><b>Last 10 {{ expense_type }} Expenses</b></h3>
+                                            </header>
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Amount</th>
+                                                    <th>Date</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id='staff'>
+                                                {% if expense_list %}
+                                                {% for expense in expense_list %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ expense.amount|title }}</td>
+                                                    <td>{{ expense.created_at|date }}</td>
+                                                    <td style=''>
+                                                        <a style="width:100px;height:100px;display:inline;margin-right:5px;" href="{% url 'expense_detail' expense.id %}" class='btn btn-primary'> View </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %} {% else %}
+                                                <tr><td colspan=6><h3 class='text-center'>NO EXPENSE RECORDED FOR THIS TYPE YET</h3></td></tr>
+                                                {% endif %}
+                                                </tbody>
+                                            </table>
+                                        </section>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<script src="http://localhost/alyaqeen/public/js/jquery.js"></script>
+<script type='text/javascript'>
+	$(document).ready(function(){
+		setTimeout(function(){
+			$('.text-error').fadeOut('slow')
+		}, 5000)
+	})
+</script>
+
+{%endblock %}

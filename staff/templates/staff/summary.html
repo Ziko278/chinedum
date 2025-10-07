@@ -1,0 +1,37 @@
+{% extends 'admin_layout.html' %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'page_name' %} Staff {%endblock %}
+{% block 'sub_page_name' %} Summary {%endblock %}
+{% block 'main_content' %}
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <i class="fa fa-cloud-download"></i>
+            <div style='margin-left:-100px;'class="count">{{ no_of_staff }}</div>
+            <div class="title">No of Staff</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <i class="fa fa-shopping-cart"></i>
+            <div class="count">N {{ monthly_salary }}</div>
+            <div class="title">Total Monthly Salary</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <i class="fa fa-thumbs-o-up"></i>
+            <div class="count">N {{ avg_monthly_salary }}</div>
+            <div class="title">Average Monthly Salary</div>
+        </div>
+    </div>
+
+</div>
+
+{%endblock %}

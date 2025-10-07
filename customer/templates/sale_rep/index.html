@@ -1,0 +1,58 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Sale Rep {%endblock %}
+{% block 'sub_page_name' %} List <div style="float:right"></div> {%endblock %}
+{% block 'main_content' %}
+{% load static %}
+<div style='margin:20px;margin-top:0px;background:lightgrey;height:45px;border-radius:5px;padding:10px 50px;color:white'>
+		<a href="{% url 'sale_rep_create' %}" class='btn btn-info' style='height:30px;float:right'><i class='fa fa-plus'></i> Sale Rep</a>
+
+	</div>
+	<div class="col-sm-12 col-md-12 col-lg-12">
+            <section class="panel">
+              <header class="panel-heading text-center">
+                <h3 class='text-center'><b>SALE REP LIST</b></h3>
+              </header>
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+					<th>Image</th>
+                      <th class="text-center">Max Credit</th>
+                      <th class="text-center">Current Credit</th>
+                      <th class="text-center">Crate Owed</th>
+                       <th>Phone Number</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id='staff'>
+                  {% if sale_rep_list %}
+                  {% for sale_rep in sale_rep_list %}
+					<tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ sale_rep.full_name|title }}</td>
+                    <td><img style='width:60px;height:50px;border-radius:10px;' {% if staff.image %} src='/media/{{ staff.image }}' {% else %} src="{% static 'images/default_image.jpg' %}" {% endif %} /></td>
+					<td class="text-center"> {{ sale_rep.max_credit }}</td>
+                        <td class="text-center"> {{ sale_rep.credit }}</td>
+                        <td class="text-center"> {{ sale_rep.crate_credit }}</td>
+                        <td > {% if sale_rep.mobile %} {{ sale_rep.mobile }} {% endif %} </td>
+                        <td style=''>
+                    <a style="width:100px;height:70px;display:inline;margin-right:5px;" href="{% url 'sale_rep_detail' sale_rep.id %}" class='btn btn-primary'> View </a>
+                    </td>
+					</tr>
+
+                  {% endfor %}
+                  {% else %}
+						<tr><td colspan=6><h1 class='text-center'>NO SALE REP REGISTERED YET</h1></td></tr>
+                  {% endif %}
+
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+<script src="http://localhost/alyaqeen/public/js/jquery.js"></script>
+
+
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Sale <div style="float:right" class="row">
+    <div class="col-md-4">
+      <input type="date" id="date" style='width:250px;display:inline;' size="16" class="form-control" name='date'>
+    </div>
+
+</div><br><br>{%endblock %}
+{% block 'sub_page_name' %} Transactions {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'main_content' %}
+<section class="panel">
+    <header class="panel-heading text-center">
+        <h3 class='text-center'>Recent Transactions</h3>
+    </header>
+    <div style='padding:15px;color:black;'>
+        {% if transaction_list %}
+        {% for transaction in transaction_list %}
+            {% if transaction.transaction_type == 'sale' %}
+
+			<div style="{% if transaction.sale.current_balance > 0 or transaction.sale.crate_owed > 0 %} border:1px solid red;background:wheat; {% else %} border:1px solid green;background:lightgreen;  {% endif %} padding:10px;margin:5px;">
+                <h4><b>{% if transaction.client_type == 'sale_rep' %} {{ transaction.sale_rep|title }} {% elif transaction.client_type == 'customer' %} {{ transaction.customer|title }} {% else %} {% if transaction.client_detail %} {{ transaction.client_detail }} {% else %} An Anonymous Client {% endif %} {% endif %} </b>  bought items worth <b>N {{ transaction.sale.grand_total }} with {{ transaction.sale.total_crate|add:transaction.sale.crate_owed }} crates</b> on <b> {{ transaction.sale.created_at|date }}</b>, {% if transaction.sale.current_balance == 0 and transaction.sale.crate_owed == 0 %} He paid completely and brought complete bottle {% elif transaction.sale.current_balance > 0 and transaction.sale.crate_owed == 0 %} He paid <b><span class='text-success'>N {{ transaction.sale.amount_paid }}</span></b> and owed a cash balance of <b><span class='text-danger'>N {{ transaction.sale.current_balance }} </span> but brought complete crate {% elif transaction.sale.current_balance > 0 and transaction.sale.crate_owed > 0 %} he paid cash of <b>N{{ transaction.sale.amount_paid }} and brought {{ transaction.sale.total_crate }} crates </b> then owed cash of <b>N{{ transaction.sale.current_balance }} and {{ transaction.sale.crate_owed }} crates</b> {% elif transaction.sale.current_balance == 0 and transaction.sale.crate_owed > 0 %} He bought {{ transaction.sale.total_crate }} crates, paid cash completely and owed <span class='text-danger'> {{ transaction.sale.crate_owed }}</span> </b> crates {% endif %} <span><b>Bal: N {{ transaction.total_balance }} ( {{ transaction.total_crate_balance }} Crate ) </b></span> <a style='float:right' href="{% url 'sale_detail' transaction.sale.sale_id %}" class='btn btn-primary'>View</a></h4>
+			</div>
+
+			{% elif transaction.transaction_type == 'Cash Balance' %}
+
+			{% elif transaction.transaction_type == 'Cash Balance' %}
+
+
+            {% endif %}
+        {% endfor %}
+        {% else %}
+			<h2 class="text-center">NO RECENT TRANSACTION</h2>
+        {% endif %}
+		</div>
+
+</section>
+{%endblock %}

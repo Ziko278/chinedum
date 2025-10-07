@@ -1,0 +1,123 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Inventory {%endblock %}
+{% block 'sub_page_name' %} Single Stock In  {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'main_content' %}
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class='text-center'>Inventory</th>
+                            <th class='text-center'>Qty Bought</th>
+                            <th class='text-center'>Empties</th>
+                            <th class='text-center'>Unit Price (N)</th>
+                            <th class='text-center'>Total Price (N)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class='blank_row'><td></td></tr>
+                        <tr class='product_row' id='sale_row1' row=1>
+                            <td class="text-center">
+                                <p> {{ inventory.name|title }}</p>
+                                <input type='hidden' name='inventory' value="{{ inventory.id }}" />
+                            </td>
+                            <td>
+                                <input id='quantity_bought' class='text-center form-control' required step=".01" type='number' name='quantity_bought' />
+                            </td>
+                            <td>
+                                <input id='empty' class='text-center form-control' required step=".01"  type='number' name='empty' />
+                            </td>
+                            <td>
+                                <input id='unit_cost_price' type='number' value="{{ cost_price }}" required  name="unit_cost_price" class="form-control" >
+                            </td>
+                            <td>
+                                <input id='total_cost_price' type='number' required  name="total_cost_price" class="form-control" >
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                        <input type="submit" style='margin-top:5px;margin-left:50px;margin-bottom:20px' class="btn btn-success" value="Stock In" />
+      <a style='margin-top:5px;margin-left:10px;margin-bottom:20px' href="{% url 'inventory_detail' inventory.id %}" class="btn btn-danger">Cancel</a>
+                </div>
+
+            </form>
+        </section>
+    </div>
+</div>
+<script src="{% static 'scripts/jquery.js' %}"></script>
+<script type='text/javascript'>
+$(document).ready(function(){
+
+    $('#empty').mouseover(function(){
+	    $(this).attr('readonly', true)
+	}).mouseout(function(){
+	    $(this).attr('readonly', false)
+	    $(this).attr('required', true)
+	})
+
+    $('#unit_cost_price').keyup(function(){
+        unit_cost_price = $(this).val()
+        quantity_bought = $('#quantity_bought').val()
+        total_cost_price = parseFloat(unit_cost_price) * parseFloat(quantity_bought)
+        $('#total_cost_price').val(total_cost_price)
+    })
+
+    $('#quantity_bought').keyup(function(){
+        quantity_bought = $(this).val()
+        $('#empty').val(quantity_bought)
+    })
+
+    $('#unit_cost_price').change(function(){
+        unit_cost_price = $(this).val()
+        quantity_bought = $('#quantity_bought').val()
+        total_cost_price = parseFloat(unit_cost_price) * parseFloat(quantity_bought)
+        $('#total_cost_price').val(total_cost_price)
+    })
+
+    $('#total_cost_price').keyup(function(){
+        total_cost_price = $(this).val()
+        quantity_bought = $('#quantity_bought').val()
+        unit_cost_price = parseFloat(total_cost_price) / parseFloat(quantity_bought)
+        $('#unit_cost_price').val(unit_cost_price)
+    })
+
+    $('#total_cost_price').change(function(){
+        total_cost_price = $(this).val()
+        quantity_bought = $('#quantity_bought').val()
+        unit_cost_price = parseFloat(total_cost_price) / parseFloat(quantity_bought)
+        $('#unit_cost_price').val(unit_cost_price)
+    })
+
+    $('#quantity_bought').keyup(function(){
+        quantity_bought = $(this).val()
+        unit_cost_price = $('#unit_cost_price').val()
+        total_cost_price = $('#total_cost_price').val()
+        if(unit_cost_price != ''){
+            total_cost_price = parseFloat(unit_cost_price) * parseFloat(quantity_bought)
+            $('#total_cost_price').val(total_cost_price)
+        }else if(total_cost_price != ''){
+            unit_cost_price = parseFloat(total_cost_price) / parseFloat(quantity_bought)
+            $('#unit_cost_price').val(unit_cost_price)
+        }
+    })
+})
+</script>
+{%endblock %}
+
+	    $('#grand_total').mouseover(function(){
+	        $(this).attr('readonly', true)
+	    }).mouseout(function(){
+	        $(this).attr('readonly', false)
+	        $(this).attr('required', true)
+	    })
+

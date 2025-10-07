@@ -1,0 +1,24 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Expense {%endblock %}
+{% block 'sub_page_name' %} Delete {%endblock %}
+{% block 'main_content' %}
+<div class="page-header">
+    <h3 class="page-title"> EXPENSE:  {{ expense.type|title }} (N {{ expense.amount}})</h3>
+</div>
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Are you sure you want to delete <i>"N {{ expense.amount }}"</i> expense for {{ expense.type|title }} recorded on {{ expense.created_at|date }}? </h4>
+            <p>If you delete it,  the data may be lost permanently</p>
+
+            <form style="display:inline" method="post">
+                {% csrf_token %}
+                <button class="btn btn-success">Proceed</button>
+            </form>
+            <a class="btn btn-danger" href="{% url 'expense_detail' expense.id %}"> Cancel</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,289 @@
+{% extends 'admin_layout.html' %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'page_name' %} Inventory <div style="float:right">
+    <a href="{% url 'single_stock_in_create' inventory.id %}" class="btn btn-success">Stock In</a>
+    <a href="{% url 'stock_out_empty' inventory.id %}" class="btn btn-warning">Stock Out Empty</a>
+    <a href="{% url 'inventory_add_empty' inventory.id %}" class="btn btn-info">Add Empty</a>
+    <a href="{% url 'inventory_edit' inventory.id %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'inventory_delete' inventory.id %}" class="btn btn-danger">Delete</a>
+</div>
+{%endblock %}
+{% block 'sub_page_name' %} Detail {%endblock %}
+{% block 'main_content' %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+            <div class="panel-body">
+                <div class="col-lg-3 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>INVENTORY</b></span>
+                            <i class="fa fa-comments fa-2x"> </i><br> {{ inventory.name|title }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b> SELLING PRICE</b></span>
+                            <i class="fa fa-bell fa-2x"> </i><br> {{ inventory.selling_price }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>QUANTITY LEFT</b></span>
+                            <i class="fa fa-tachometer fa-2x"> </i><br> {{ inventory.quantity_left }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>AVAILABLE EMPTIES</b></span>
+                            <i class="fa fa-tachometer fa-2x"> </i><br>  {{ inventory.empty }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading tab-bg-info">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#recent-activity">
+                            <i class="icon-home"></i> Stock Details
+                        </a>
+                  </li>
+                  <li class="">
+                      <a data-toggle="tab" href="#edit-profile">
+                          <i class="icon-envelope"></i>Sale Details
+                      </a>
+                  </li>
+                </ul>
+            </header>
+
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div id="recent-activity" class="tab-pane">
+                        <section class="panel">
+                        <div class="col-lg-12">
+                            <div class="modal-body">
+                                <div class="activity-body act-in">
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <section class="panel">
+                                            <header class="panel-heading text-center">
+                                                <h3 class='text-center'><b> ACTIVE STOCK LIST OF {{ inventory.name|upper }}</b></h3>
+                                            </header>
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Qty Bought</th>
+                                                    <th>Qty Remaining</th>
+                                                    <th>Total Cost Price (N)</th>
+                                                    <th>Date Purchased</th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id=''>
+                                                {% if active_stock_list %}
+                                                {% for stock in active_stock_list %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ stock.quantity_bought }}</td>
+                                                    <td>{{ stock.quantity_left }}</td>
+                                                    <td>{{ stock.total_cost_price }}</td>
+                                                    <td>{{ stock.created_at|date }}</td>
+                                                    <td class="text-center">
+                                                        <a style="border-radius:5px;color:white;width:100px" class="btn btn-primary" href="{% url 'stock_in_detail' stock.id %}">View</a>
+                                                        <a style="border-radius:5px;color:white;width:100px" class="btn btn-warning" href="{% url 'stock_out' stock.id %}">Stock Out</a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                    <tr><td colspan=6><h3 class='text-center'>NO ACTIVE STOCK FOR {{ inventory.name|upper }} AT THE MOMENTS</h3></td></tr>{% endif %}
+                                                </tbody>
+                                            </table>
+                                        </section>
+                                    </div>
+
+                                    {% if finished_stock_list %}
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <section class="panel">
+                                            <header class="panel-heading text-center">
+                                                <h3 class='text-center'><b> ACTIVE STOCK LIST OF {{ inventory.name|upper }}</b></h3>
+                                            </header>
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Qty Bought</th>
+                                                    <th>Unit Cost Price (N)</th>
+                                                    <th>Total Cost Price (N)</th>
+                                                    <th>Date Purchased</th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                {% for stock in active_stock_list %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ stock.quantity_bought }}</td>
+                                                    <td>{{ stock.unit_cost_price }}</td>
+                                                    <td>{{ stock.total_cost_price }}</td>
+                                                    <td>{{ stock.created_at|date }}</td>
+                                                    <td class="text-center">
+                                                        <a style="border-radius:5px;color:white;width:100px" class="btn btn-primary" href="{% url 'stock_in_detail' stock.id %}">View</a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </section>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if stock_out_list %}
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <section class="panel">
+                                            <header class="panel-heading text-center">
+                                                <h3 class='text-center'><b> STOCK OUT LIST FOR {{ inventory.name|upper }}</b></h3>
+                                            </header>
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Qty Stocked Out</th>
+                                                    <th>Crate Lost</th>
+                                                    <th>Reason</th>
+                                                    <th>Date Stocked Out</th>
+                                                    <th>Staff</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id='body'>
+                                                {% for stock in stock_out_list %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ stock.quantity }}</td>
+                                                    <td>{{ stock.empty }}</td>
+                                                    <td>{{ stock.remark }}</td>
+                                                    <td>{{ stock.created_at|date }}</td>
+                                                    <td>{{ stock.created_by }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                                 </tbody>
+                                            </table>
+                                        </section>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        </section>
+                    </div>
+
+                    <div id="edit-profile" class="tab-pane active">
+                        <section class="panel">
+                            <div class="col-lg-12">
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box blue-bg">
+                                                <div style='margin-left:0px;'class="count"> {{ inventory.quantity_left }}</div>
+                                                <div class="title">No of {{ inventory }} in store</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box brown-bg">
+                                                <div class="count">N {% if worth_in_store %} {{ worth_in_store }} {% else %} 0 {% endif %}</div>
+                                                <div class="title">Worth of {{ inventory }} in store</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box dark-bg">
+                                                <div class="count"> {{ total_bought.quantity_bought__sum }} </div>
+                                                <div class="title">Total No of {{ inventory }} Bought</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box blue-bg">
+                                                <div style='margin-left:0px;'class="count">{% if total_sold.quantity__sum  %} {{ total_sold.quantity__sum }} {% else %} 0 {% endif %}</div>
+                                                <div class="title">Total No {{ inventory }} Sold</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box brown-bg">
+                                                <div class="count">{% if total_damage.quantity__sum %} {{ total_damage.quantity__sum }} {% else %} 0 {% endif %}</div>
+                                                <div class="title">Total No {{ inventory }} Damaged</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box dark-bg">
+                                                <div class="count"> N {% if total_worth_bought.total_cost_price__sum %} {{ total_worth_bought.total_cost_price__sum }} {% else %} 0 {% endif %}</div>
+                                                <div class="title">Total Worth of {{ inventory }} Bought</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box blue-bg">
+                                                <div style='margin-left:0px;'class="count">N {% if total_sold_worth.total_price__sum %} {{ total_sold_worth.total_price__sum }} {% else %} 0 {% endif %}</div>
+                                                <div class="title">Total Worth of {{ inventory }} Sold</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box brown-bg">
+                                                <div class="count">N {{ total_worth_damaged.worth__sum }}</div>
+                                                <div class="title">Total Worth of {{ inventory }} Damaged</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box dark-bg">
+                                                <div class="count"> {{ total_profit }}</div>
+                                                <div class="title">Total Potential Profit from {{ inventory }} </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<script src="http://localhost/alyaqeen/public/js/jquery.js"></script>
+<script type='text/javascript'>
+	$(document).ready(function(){
+		setTimeout(function(){
+			$('.text-error').fadeOut('slow')
+		}, 5000)
+	})
+</script>
+
+{%endblock %}

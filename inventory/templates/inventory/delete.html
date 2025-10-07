@@ -1,0 +1,24 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Inventory {%endblock %}
+{% block 'sub_page_name' %} Delete  {%endblock %}
+{% block 'main_content' %}
+<div class="page-header">
+    <h3 class="page-title"> INVENTORY:  {{ inventory.name|title }} </h3>
+</div>
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Are you sure you want to delete <i>"{{ inventory.name|title }}"</i> as an Inventory? </h4>
+            <p>If you delete it, Statistics regarding the Inventory may be permanently lost</p>
+
+            <form style="display:inline" method="post">
+                {% csrf_token %}
+                <button class="btn btn-success">Proceed</button>
+            </form>
+            <a class="btn btn-danger" href="{% url 'inventory_detail' inventory.id %}"> Cancel</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Expense <div style="float:right">
+    <a href="{% url 'expense_edit' expense.id %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'expense_delete' expense.id %}" class="btn btn-danger">Delete</a>
+</div>
+{%endblock %}
+{% block 'sub_page_name' %} Detail {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+
+{% block 'main_content' %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+            <div class="panel-body">
+                <div class="col-lg-3 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>EXPENSE TYPE</b></span>
+                            <i class="fa fa-comments fa-2x"> </i><br> {{ expense.type }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>AMOUNT</b></span>
+                            <i class="fa fa-comments fa-2x"> </i><br> N {{ expense.amount }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>DATE</b></span>
+                            <i class="fa fa-comments fa-2x"> </i> <br>
+                             {{ expense.created_at|date }}
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>RECORDED BY</b></span>
+                            <i class="fa fa-comments fa-2x"> </i> <br>
+                             {{ expense.created_by }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading tab-bg-info">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#recent-activity">
+                            <i class="icon-home"></i>Extra Info
+                        </a>
+                  </li>
+                </ul>
+            </header>
+
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div id="recent-activity" class="tab-pane active">
+                        <section class="panel">
+                        <div class="col-lg-12">
+                            <div class="modal-body">
+                                <div class="activity-body act-in">
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <p>{% if expense.remark %} {{ expense.remark }} {% else %} No Extra Information Recorded for this Expense {% endif %}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<script src="http://localhost/alyaqeen/public/js/jquery.js"></script>
+<script type='text/javascript'>
+	$(document).ready(function(){
+		setTimeout(function(){
+			$('.text-error').fadeOut('slow')
+		}, 5000)
+	})
+</script>
+
+{%endblock %}

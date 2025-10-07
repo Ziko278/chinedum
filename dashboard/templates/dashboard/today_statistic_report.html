@@ -1,0 +1,142 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Report {%endblock %}
+{% block 'sub_page_name' %} Statistic Report {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+
+{% block 'main_content' %}
+<section style="background:white">
+<div class="row">
+    <div class="col-md-5">
+        <form method="POST" action="{% url 'statistic_report' 'date' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="control-label col-md-2"><b>Single Date</b></label>
+                <div class="col-md-9">
+                     <input type="hidden" name="statistic_type" value="date">
+                    <input type="date"  style='width:150px;display:inline;' required size="16" class="form-control" name='start_date'>
+                    <input type='submit' style='display:inline;' class= 'btn btn-info' value='CHECK'  />
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-lg-7">
+        <form method="POST" action="{% url 'statistic_report' 'date' %}" />
+        {% csrf_token %}
+            <div class="form-group">
+                <label class="control-label col-sm-2"><b>Range Date</b></label>
+                <div class="col-md-10">
+                     <input type="hidden" name="statistic_type" value="range">
+                    <input type="date"  style='width:150px;display:inline;' size="16" required class="form-control" name='start_date'>
+                    <input type="date"  style='width:150px;display:inline;' size="16" required class="form-control" name='end_date'>
+                    <input type='submit' style='display:inline;' class= 'btn btn-info' value='CHECK'  />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+     <section class="panel">
+              <header  class="text-center panel-heading">
+                <h3 style="color:black;" class='text-center'>CHINEDUM ENTERPRISE STORE SALES REPORT FOR {{ start_date|date }}  </h3>
+              </header>
+     </section>
+
+    <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <div style='margin-left:0px;'class="count"> {{ no_of_sale }}</div>
+            <div class="title">No of today sale</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <div class="count"> {{ no_of_item }}</div>
+            <div class="title">No of Items Sold Today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <div class="count"> {{ cost_of_good }} </div>
+            <div class="title">Cost of goods sold today</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <div style='margin-left:0px;'class="count">N {{ price_of_good }}</div>
+            <div class="title">Amount from goods sold today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <div class="count">N {{ profit_from_good }}</div>
+            <div class="title">Profit from good today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <div class="count"> {{ debt_owed }}</div>
+            <div class="title">Debt owed today</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <div style='margin-left:0px;'class="count">N {{ income_made }}</div>
+            <div class="title">Non Sale Income Today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <div class="count">N {{ expense_made }}</div>
+            <div class="title">Expenses incurred today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <div class="count"> {{ debt_refunded }}</div>
+            <div class="title">Debt Refunded Today</div>
+        </div>
+    </div>
+</div>
+
+    <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <div style='margin-left:0px;'class="count">N {{ cash.cash_paid__sum|floatformat }}</div>
+            <div class="title">Cash from Sale Today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <div class="count">N {{ transfer.transfer_paid__sum|floatformat }}</div>
+            <div class="title">Transfer from Sale today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <div class="count"> {{ final_profit }}</div>
+            <div class="title">Profit after Expenses Today</div>
+        </div>
+    </div>
+</div>
+
+</section>
+{%endblock %}

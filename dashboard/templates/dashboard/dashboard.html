@@ -1,0 +1,80 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Dashboard {%endblock %}
+{% block 'sub_page_name' %} Dashboard {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+
+{% block 'main_content' %}
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <div style='margin-left:0px;'class="count"> {{ no_of_sale }}</div>
+            <div class="title">No of today sale</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <div class="count"> {{ no_of_item }}</div>
+            <div class="title">No of Items Sold Today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <div class="count"> {{ cost_of_good }} </div>
+            <div class="title">Cost of goods sold today</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <div style='margin-left:0px;'class="count">N {{ price_of_good }}</div>
+            <div class="title">Amount from goods sold today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <div class="count">N {{ profit_from_good }}</div>
+            <div class="title">Profit from good today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <div class="count"> {{ debt_owed }}</div>
+            <div class="title">Debt owed today</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <div style='margin-left:0px;'class="count">N {{ total_debt_owed }}</div>
+            <div class="title">Total Debt</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <div class="count">N {{ expense_made }}</div>
+            <div class="title">Expenses incurred today</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <div class="count"> {{ debt_refunded }}</div>
+            <div class="title">Debt Refunded Today</div>
+        </div>
+    </div>
+</div>
+
+{%endblock %}

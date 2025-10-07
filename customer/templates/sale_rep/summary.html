@@ -1,0 +1,56 @@
+{% extends 'admin_layout.html' %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'page_name' %} Sale Rep {%endblock %}
+{% block 'sub_page_name' %} Summary {%endblock %}
+{% block 'main_content' %}
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <div style='margin-left:00px;'class="count">{{ no_of_sale_rep }}</div>
+            <div class="title">No of Sale Rep</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <div class="count">N {{ total_max_credit }}</div>
+            <div class="title">Total Allowed Credit</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <div class="count">N {{ total_credit }}</div>
+            <div class="title">Total Credit Owed</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box blue-bg">
+            <div style='margin-left:0px;'class="count">{% if total_crate_owed.crate_owed__sum %} {{ total_crate_owed.crate_owed__sum }} {% else %} 0 {% endif %}</div>
+            <div class="title">Total Crate Owed</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box brown-bg">
+            <div class="count">N {{ total_bought.total_crate__sum }}</div>
+            <div class="title">Total Crate bought</div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="info-box dark-bg">
+            <div class="count">{% if highest_buying_customer %} {{ highest_buying_customer }} {% endif %}</div>
+            <div class="title">Most Valuable Sale Rep</div>
+        </div>
+    </div>
+</div>
+
+{%endblock %}

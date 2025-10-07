@@ -1,0 +1,161 @@
+{% extends 'admin_layout.html' %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'page_name' %} Sale Rep <div style="float:right">
+    <a href="{% url 'customer_sale_transaction' sale_rep.id 'sale_rep' %}" class="btn btn-success">All Transactions</a>
+    <a href="{% url 'sale_rep_edit' sale_rep.id %}" class="btn btn-primary">Edit</a>
+    <a href="{% url 'sale_rep_delete' sale_rep.id %}" class="btn btn-danger">Delete</a>
+</div>
+{%endblock %}
+{% block 'sub_page_name' %} Detail {%endblock %}
+{% block 'main_content' %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+            <div class="panel-body">
+                <div class="col-lg-2 col-sm-2">
+                    <h4>{{ sale_rep.full_name|title }}</h4>
+                    <div class="follow-ava">
+                        <img {% if sale_rep.image %} src="/media/{{ sale_rep.image }}" {% else %} src="{% static 'images/default_image.jpg' %}" {% endif %} alt="">
+                    </div>
+                    <h6>{{ sale_rep.status }}</h6>
+                </div>
+                <div class="col-lg-4 col-sm-4 follow-info">
+                    <p><i class="icon_pin_alt"></i> {% if sale_rep.residential_address %} {{ sale_rep.residential_address }} {% else %} Address Not Given {% endif %}</p>
+                    <p><i class="fa fa-phone"></i><a href="tel:{{ sale_rep.mobile}}" style='color:white'> {% if sale_rep.mobile %} {{ sale_rep.mobile }} {% else %} Phone Number Not Given {% endif %}</a></p>
+                    <p><i class="fa fa-shopping-cart"></i> <b>Max Credit:</b> N {{ sale_rep.max_credit }}</p>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>MAX CREDIT</b></span>
+                            <i class="fa fa-comments fa-2x"> </i><br> N {{ sale_rep.max_credit }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b> CURRENT CREDIT</b></span>
+                            <i class="fa fa-bell fa-2x"> </i><br> N {{ sale_rep.credit }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-sm-6 follow-info weather-category">
+                    <ul>
+                        <li class="active">
+                            <span><b>CRATE CREDIT</b></span>
+                            <i class="fa fa-tachometer fa-2x"> </i><br>  N {{ sale_rep.crate_credit }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading tab-bg-info">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#recent-activity">
+                            <i class="icon-home"></i>Traansaction Details
+                        </a>
+                  </li>
+
+                </ul>
+            </header>
+
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div id="recent-activity" class="tab-pane active">
+                        <section class="panel">
+                                        <div class="col-lg-12">
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                        <div class="info-box blue-bg">
+                                                            <div style='margin-left:0px;'class="count"> {% if total_bought.total_crate__sum %} {{ total_bought.total_crate__sum|add:sale_rep.crate_credit }} {% else %} 0 {% endif %} /  {{ sale_rep.crate_credit }} </div>
+                                                            <div class="title">No of crate bought/empty owed</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                        <div class="info-box brown-bg">
+                                                            <div class="count">N {% if total_bought_worth.grand_total__sum %} {{ total_bought_worth.grand_total__sum }} {% else %} 0 {% endif %}</div>
+                                                            <div class="title">Total Worth of items bought</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                        <div class="info-box dark-bg">
+                                                            <div class="count"> N {{ sale_rep.credit }} </div>
+                                                            <div class="title">Amount Owed</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                        <section class="panel">
+                        <div class="col-lg-12">
+                            <div class="modal-body">
+                                <div class="activity-body act-in">
+                                    <section class="panel">
+                                        <header class="panel-heading text-center">
+                                            <h3 class='text-center'>Recent Transactions</h3>
+                                        </header>
+                                        <div style='padding:15px;color:black;'>
+                                            {% if transaction_list %}
+                                            {% for transaction in transaction_list %}
+                                            {% if transaction.transaction_type == 'sale' %}
+
+                                            <div style="{% if transaction.sale.current_balance > 0 or transaction.sale.crate_owed > 0 %} border:1px solid red;background:wheat; {% else %} border:1px solid green;background:lightgreen;  {% endif %} padding:10px;margin:5px;">
+                                                <h4><b>{% if transaction.client_type == 'sale_rep' %} {{ transaction.sale_rep|title }} {% elif transaction.client_type == 'customer' %} {{ transaction.customer|title }} {% else %} {% if transaction.client_detail %} {{ transaction.client_detail }} {% else %} An Anonymous Client {% endif %} {% endif %} </b>  bought items worth <b>N {{ transaction.sale.grand_total }} with {{ transaction.sale.total_crate|add:transaction.sale.crate_owed }} crates</b> on <b> {{ transaction.sale.created_at|date }}</b>, {% if transaction.sale.current_balance == 0 and transaction.sale.crate_owed == 0 %} He paid completely and brought complete bottle {% elif transaction.sale.current_balance > 0 and transaction.sale.crate_owed == 0 %} He paid <b><span class='text-success'>N {{ transaction.sale.amount_paid }}</span></b> and owed a cash balance of <b><span class='text-danger'>N {{ transaction.sale.current_balance }} </span> but brought complete crate {% elif transaction.sale.current_balance > 0 and transaction.sale.crate_owed > 0 %} he paid cash of <b>N{{ transaction.sale.amount_paid }} and brought {{ transaction.sale.total_crate }} crates </b> then owed cash of <b>N{{ transaction.sale.current_balance }} and {{ transaction.sale.crate_owed }} crates</b> {% elif transaction.sale.current_balance == 0 and transaction.sale.crate_owed > 0 %} He bought {{ transaction.sale.total_crate }} crates, paid cash completely and owed <span class='text-danger'> {{ transaction.sale.crate_owed }}</span> </b> crates {% endif %} <span style="margin-left:20px;color:red"><b>Bal: N {{ transaction.total_balance }} ( {{ transaction.total_crate_balance }} Crate ) </b></span> <a style='float:right' href="{% url 'sale_detail' transaction.sale.sale_id %}" class='btn btn-primary'>View</a></h4>
+                                            </div>
+
+                                            {% elif transaction.transaction_type == 'refund' %}
+
+                                            {% if transaction.cash_refund > 0 or transaction.crate_refund > 0 %}
+                                            <div style="{% if transaction.total_balance > 0 or transaction.total_crate_balance > 0 %} border:1px solid red;background:white; {% else %} border:1px solid green;background:lightgreen;  {% endif %} padding:10px;margin:5px;">
+                                                <h4><b>{% if transaction.client_type == 'sale_rep' %} {{ transaction.sale_rep|title }} {% elif transaction.client_type == 'customer' %} {{ transaction.customer|title }} {% else %} {% if transaction.client_detail %} {{ transaction.client_detail }} {% else %} An Anonymous Client {% endif %} {% endif %} </b>   {% if transaction.cash_refund > 0 %} refunded <b> N {{ transaction.cash_refund }} </b> from his previous balance of <b>N {{ transaction.total_balance|add:transaction.cash_refund }}, </b> {% endif %} {% if transaction.crate_refund > 0 %} returned <b>{{ transaction.crate_refund }} crate </b> out of <b>{{ transaction.total_crate_balance|add:transaction.crate_refund }} crate</b> he was owing, {% endif %} this was on <b>{{ transaction.created_at|date }}</b> <span style="margin-left:20px;color:red"><b>Bal: N {{ transaction.total_balance }} ( {{ transaction.total_crate_balance }} Crate ) </b></span> <a style='float:right' href="% url 'sale_detail' transaction.sale.sale_id %}" class='btn btn-primary'>View</a></h4>
+                                            </div>
+                                            {% endif %}
+                                            {% elif transaction.transaction_type == 'Cash Balance' %}
+
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% else %}
+                                            <h2 class="text-center">NO RECENT TRANSACTION BY {{ sale_rep.full_name|upper }}</h2>
+                                            {% endif %}
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        </section>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<script src="http://localhost/alyaqeen/public/js/jquery.js"></script>
+<script type='text/javascript'>
+	$(document).ready(function(){
+		setTimeout(function(){
+			$('.text-error').fadeOut('slow')
+		}, 5000)
+	})
+</script>
+
+{%endblock %}

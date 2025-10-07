@@ -1,0 +1,77 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Report
+
+{%endblock %}
+{% block 'sub_page_name' %} Cash Flow Report
+
+{%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+
+{% block 'main_content' %}
+
+<section class="panel">
+    <header class="panel-heading text-center">
+        <h3 class='text-center'>Cash Flow Report for {{ today|date }}</h3>
+    </header>
+    <div class="row">
+        <div class="col-md-6" style="border:2px solid black;min-height:300px">
+            <header class="panel-heading text-center">
+                <h3 class='text-center'>Incoming Cash Flow</h3>
+            </header>
+            <ul>
+                <li><h4><span>Total Sale</span><span style="float:right">N {{ total_cash_from_sale.grand_total__sum|floatformat }}</span></h4></li>
+                <li><h4><span>Total Debt Refunded</span><span style="float:right">N {% if total_debt_refunded.cash_refund__sum  %} {{ total_debt_refunded.cash_refund__sum|floatformat }} {% else %} 0 {% endif %}</span></h4></li>
+                <li><h4><span>Other Incomes</span><span style="float:right">N {% if in_coming_expenses.amount__sum %} {{ in_coming_expenses.amount__sum|floatformat }} {% else %} 0 {% endif %}</span></h4></li>
+                <li><h4><span>Previous Till</span><span style="float:right">N {{ previous_till}}</span></h4></li>
+                <li><h4><br /><br /><hr /></h4></li>
+                <li><h4><span><b>Total Cash</b></span><span style="float:right"><b>N {{ total_cash_at_hand|floatformat }}</b></span></h4></li>
+            </ul>
+        </div>
+        <div class="col-md-6" style="border:2px solid black;min-height:300px;">
+            <header class="panel-heading text-center">
+                <h3 class='text-center'>Outgoing Cash Flow</h3>
+            </header>
+            <ul>
+                <li><h4><span>Total Bank Transfer from Sale</span><span style="float:right">N {{ total_transfer_from_sale.transfer_paid__sum|floatformat }}</span></h4></li>
+                <li><h4><span>Total Debt Owed</span><span style="float:right">N {{ total_debt_owed.current_balance__sum|floatformat }}</span></h4></li>
+                <li><h4><span>Total Outgoing Expenses</span><span style="float:right">N {% if out_going_expenses.amount__sum %} {{ out_going_expenses.amount__sum|floatformat }} {% else %} 0 {% endif %}</span></h4></li>
+                <li><h4><span><br /></span></h4></li>
+                <li><h4><span>Lodgement</span><span style="float:right"><b>N {{ lodgement|floatformat }}</b></span></h4></li>
+                <li><h4><span>Present Till</span><span style="float:right">N {{ present_till|floatformat }}</span></h4></li>
+                <li><h4><hr /></h4></li>
+                <li><h4><span><b>Total Cash</b></span><span style="float:right"><b>N {{ total_cash_at_hand|floatformat }}</b></span></h4></li>
+            </ul>
+        </div>
+    </div>
+    <br />
+    <div style="">
+    <form method="POST" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="col-md-9">
+                    <input type="date"  style='width:150px;display:inline;' required size="16" class="form-control" name='date'>
+                    <input type='submit' style='display:inline;' class= 'btn btn-info' value='CHECK'  />
+                </div>
+            </div>
+        </form>
+</div>
+    {% if is_today %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div>
+            <span style="float:right;margin-top:-30px">
+                <label><b>Lodgement:</b></label>
+                <input type="hidden" name="cash_at_hand" value="{{ total_cash_at_hand }}">
+                <input type="hidden" name="user" value="{{ layout_user.pk }}">
+                <input type="number" name="lodgement" required max="{{ lodgement|add:present_till }}" class="form-control" style="width:150px;display:inline" placeholder="Enter Lodgement">
+                <button class="btn btn-success">SAVE</button>
+            </span>
+        </div>
+    </form>
+    {% endif %}
+</section>
+{%endblock %}

@@ -1,0 +1,24 @@
+{% extends 'admin_layout.html' %}
+{% load static %}
+{% block 'page_name' %} Sale Rep {%endblock %}
+{% block 'sub_page_name' %} Delete {%endblock %}
+{% block 'main_content' %}
+<div class="page-header">
+    <h3 class="page-title"> STAFF INFORMATION:  {{ staff.full_name|title }}  </h3>
+</div>
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Are you sure you want to delete <i>"{{ sale_rep.full_name|title }}"</i> as a sale rep? <img style="display:inline;width:100px;height:100px;border-radius:5px;" {% if staff.image %} src="/media/{{ sale_rep.image }}" {% else %} src="{% static 'images/default_image.jpg' %}" {% endif %} /></h4>
+            <p>If you delete a sale rep, data regarding that sale rep may be lost</p>
+
+            <form style="display:inline" method="post">
+                {% csrf_token %}
+                <button class="btn btn-success">Proceed</button>
+            </form>
+            <a class="btn btn-danger" href="{% url 'sale_rep_detail' sale_rep.id %}"> Cancel</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

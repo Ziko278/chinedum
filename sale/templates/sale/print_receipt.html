@@ -1,0 +1,100 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Sale {%endblock %}
+{% block 'sub_page_name' %} Print Receipt {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'main_content' %}
+<style>
+.adjust{
+    margin-left:25px;
+    }
+.label{
+    width:200px;
+    text-align:right;
+}
+</style>
+<div class="row">
+    <div class="col-lg-12">
+
+        <div id="receipt" style="width:400px">
+            <div class="text-center" id="header">
+                <h4 style="text-align:center;font-family:sans-serif; font-size:25px;"><b>CHINEDUM INVESTMENT NIG</b></h4>
+                <p style="text-align:center; margin-top:0px;"><i>Dealer on all Kinds of  & Drinks/Beers(Wholesale & Retail)</i></p>
+                <div  style="text-align:center; margin-top:0px;"><label>Tel:<b> 07037388812, 08132512413, 09038008502 </b></label></div>
+            </div>
+             <div>
+                <p style="text-align:center"><span>Address:</span><i>Opp Police Station, Aso Road, Zone 4 Mararaba, Nasarawa State</i></p>
+                <p style="text-align:center;font-family:courier;">INVOICE-{{ sale.sale_id }}</p>
+             </div>
+            <div id=""><br>
+                <p><label class="label" style="color:black;padding-left:10px;font-size:14px;"><b>Name:</b></label> <span class="adust">{% if sale.client_type == 'customer' %} {{ sale.customer|title }} (C) {% else %} {% if sale.client_detail %} {{ sale.client_detail|title }} {% else %} {{ 'anonymous'|title }} {% endif %}{% endif %}</span></p>
+                <p><label class="label" style="color:black;padding-left:10px;font-size:14px;"><b>Phone: </b></label> <span class="ajust">{% if sale.client_type == 'customer' %} {% if sale.customer.mobile %}  {{ sale.customer.mobile }} {% endif %} {% endif %}</span></p>
+                <p><label class="label" style="color:black;padding-left:10px;font-size:14px;"><b>Date: </b></label> <span class="adust"> {{ sale.created_at }}</span></p>
+            </div><br>
+            <table border="1" style="width:100%;">
+                <thead>
+                    <tr>
+                        <td style="text-align:center"><b>ITEM</b></td>
+                        <td style="text-align:center"><b>QTY</b></td>
+                        <td style="text-align:center"><b>RATE</b></td>
+                        <td style="text-align:center"><b>TOTAL (N)</b></td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for sale_detail in sale_detail_list %}
+                    <tr>
+                        <td style="text-align:center">{{ sale_detail.inventory }}</td>
+                        <td style="text-align:center">{{ sale_detail.quantity }}</td>
+                        <td style="text-align:center">{{ sale_detail.unit_selling_price }}</td>
+                        <td style="text-align:center">{{ sale_detail.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2"><b>TOTAL (N)</b></td>
+                        <td colspan="2" style="padding-left:20px"> <b>{{ sale.grand_total }}</b></td>
+                    </tr>
+                    {% if sale.current_balance %}
+                    <tr>
+                        <td colspan="2"><b>BALANCE (N)</b></td>
+                        <td colspan="2" style="padding-left:20px"><b> {{ sale.current_balance }} </b></td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <br>
+            <span style="color:white;background:grey;margin:10px;">
+                Goods received in good condition.</span><br>
+            <span style="color:white;background:grey;margin:10px;">
+                No refund of money after payment
+            </span>
+            <br><br><br>
+            <div style="width:400px%;">
+                <div style="width:200px;display:inline-block;margin-left:50px;">
+                    <span style="text-decoration:underline;width:250px;"></span><br>
+                    <b>Customer Sign</b>
+                </div>
+                <div style="width:200px;display:inline;">
+                    <b>Chinedun Sign</b>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a class='btn btn-primary' href="">Back</a>
+
+<script src="http://localhost/smart/public/js/jquery.js"></script>
+<script type='text/javascript'>
+$(document).on('ready', function(){
+    data = $('#receipt').html()
+    var myWindow= window.open('','',width=400)
+    myWindow.document.write(data)
+    myWindow.print();
+})
+
+</script>
+{%endblock %}

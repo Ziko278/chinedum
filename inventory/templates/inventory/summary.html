@@ -1,0 +1,80 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Inventory {%endblock %}
+{% block 'sub_page_name' %} Summary  {%endblock %}
+{% block 'main_content' %}
+{% load static %}
+<section class="panel">
+    <div class="col-lg-12">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="info-box blue-bg">
+                        <div style='margin-left:0px;'class="count"> {% if no_of_item.quantity_left__sum %} {{ no_of_item.quantity_left__sum }} {% else %} 0 {% endif %} / {% if no_of_empty.empty__sum %} {{ no_of_empty.empty__sum }} {% else %} 0 {% endif %}</div>
+                        <div class="title">No of crate/empty in store</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="info-box brown-bg">
+                        <div class="count">N {% if worth_in_store %} {{ worth_in_store }} {% else %} 0 {% endif %}</div>
+                        <div class="title">Worth of items in store</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box dark-bg">
+                                                <div class="count"> {{ total_bought.quantity_bought__sum }} </div>
+                                                <div class="title">Total No of items Bought</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box blue-bg">
+                                                <div style='margin-left:0px;'class="count">{% if total_sold.quantity__sum  %} {{ total_sold.quantity__sum }} {% else %} 0 {% endif %}</div>
+                                                <div class="title">Total No items Sold</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box brown-bg">
+                                                <div class="count">{% if total_damage.quantity__sum %} {{ total_damage.quantity__sum }} {% else %} 0 {% endif %}</div>
+                                                <div class="title">Total No items Damaged</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box dark-bg">
+                                                <div class="count"> N {% if total_worth_bought.total_cost_price__sum %} {{ total_worth_bought.total_cost_price__sum }} {% else %} 0 {% endif %}</div>
+                                                <div class="title">Total Worth of items Bought</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box blue-bg">
+                                                <div style='margin-left:0px;'class="count">N {% if total_sold_worth.total_price__sum %} {{ total_sold_worth.total_price__sum }} {% else %} 0 {% endif %}</div>
+                                                <div class="title">Total Worth of items Sold</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box brown-bg">
+                                                <div class="count">N {{ total_worth_damaged.worth__sum }}</div>
+                                                <div class="title">Total Worth of items Damaged</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="info-box dark-bg">
+                                                <div class="count"> {{ total_profit }}</div>
+                                                <div class="title">Total Potential Profit from items </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+{% endblock %}

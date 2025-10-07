@@ -1,0 +1,60 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Stock In  {%endblock %}
+{% block 'sub_page_name' %} List {%endblock %}
+{% block 'main_content' %}
+{% load static %}
+<div style='margin:20px;margin-top:0px;background:lightgrey;height:45px;border-radius:5px;padding:10px 50px;color:white'>
+		<span style='margin-left:30px;'>Number of rows: <select id='paginate' style='width:50px;'><option>10</option><option>20</option><option>50</option></select></span>
+		<span style='margin-left:30px;'>Filter Rows: <input id='search' autocomplete='off' style='width:150px;height:25px;border-radius:5px;' type='text' placeholder='Search this table' /> </span>
+		<span style='margin-left:30px;margin-right:30px;'> Sort by Key:  <select id='sort' style='width:150px;height:25px;border-radius:5px;'><option value='none'>None</option><option value='asc'>Alphabetic (ASC) </option><option value='desc'>Alphabetic (DESC)</option></select> </span>
+		<a href="" class='btn btn-info' style='height:30px;'><i class='fa fa-plus'></i> Expense</a>
+
+	</div>
+	<div class="col-sm-12 col-md-12 col-lg-12">
+            <section class="panel">
+              <header class="panel-heading text-center">
+                <h3 class='text-center'><b>RECENT STOCK INS</b></h3>
+              </header>
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Inventory</th>
+                      <th>Qty Bought</th>
+                      <th>Qty Remaining</th>
+                    <th>Total Cost Price (N)</th>
+                      <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id='staff'>
+                  {% if stock_list %}
+                  {% for stock in stock_list %}
+					<tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ stock.inventory|title }}</td>
+                        <td>{{ stock.quantity_bought }}</td>
+                        <td>{{ stock.quantity_left }}</td>
+					<td>{{ stock.total_cost_price }}</td>
+                        <td>{{ stock.created_at|date }}</td>
+					<td style=''>
+                    <a style="width:100px;height:100px;display:inline;margin-right:5px;" href="{% url 'stock_in_detail' stock.id %}" class='btn btn-primary'> View </a>
+                    </td>
+					</tr>
+
+                  {% endfor %}
+                  {% else %}
+						<tr><td colspan=6><h1 class='text-center'>NO INVENTORY STOCKED IN YET</h1></td></tr>
+                  {% endif %}
+					<tr><td></td></tr>
+
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+<script src="http://localhost/alyaqeen/public/js/jquery.js"></script>
+
+
+
+{% endblock %}

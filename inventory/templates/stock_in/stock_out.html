@@ -1,0 +1,76 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Inventory {%endblock %}
+{% block 'sub_page_name' %} Stock Out  {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'main_content' %}
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class='text-center'>Inventory</th>
+                            <th class='text-center'>Batch No</th>
+                            <th class='text-center'>Qty Bought</th>
+                            <th class='text-center'>Qty Left</th>
+                            <th class='text-center'>Stock Out</th>
+                            <th class='text-center'>Empty</th>
+                            <th class='text-center' colspan="5">Purpose</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class='blank_row'><td></td></tr>
+                        <tr class='product_row' id='sale_row1' row=1>
+                            <td class="text-center">
+                                <p> {{ stock.inventory.name|upper }}</p>
+                                <input type='hidden' name='stock_id' value="{{ stock.id }}" />
+                            </td>
+                            <td class="text-center">
+                                <p> {{ stock.batch }}</p>
+                            </td>
+                            <td class="text-center">
+                                <p> {{ stock.quantity_bought }}</p>
+                            </td>
+                            <td class="text-center">
+                                <p> {{ stock.quantity_left }}</p>
+                            </td>
+                            <td class="text-center">
+                                <input style="width:150px" id='stock_out' type='number' max="{{ stock.quantity_left }}" required  name="quantity" class="form-control" autocomplete="off">
+                            </td>
+                            <td class="text-center">
+                                <input style="width:150px" id='empty_crate' type='number' required  name="empty" class="form-control" autocomplete="off">
+                            </td>
+                            <td colspan="5">
+                                <input id='purpose' type='text' name="purpose" class="form-control" >
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                        <input type="submit" style='margin-top:5px;margin-left:50px;margin-bottom:20px' class="btn btn-success" value="Stock Out" />
+      <a style='margin-top:5px;margin-left:10px;margin-bottom:20px' href="{% url 'inventory_detail' stock.inventory.id %}" class="btn btn-danger">Cancel</a>
+                </div>
+
+            </form>
+        </section>
+    </div>
+</div>
+<script src="{% static 'scripts/jquery.js' %}"></script>
+<script type='text/javascript'>
+$(document).ready(function(){
+    $('#stock_out').keyup(function(){
+        quantity = $(this).val()
+        $('#empty_crate').attr('max', quantity)
+    })
+})
+</script>
+{%endblock %}
+
+

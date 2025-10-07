@@ -1,0 +1,133 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Sale <div style="float:right" class="row">
+    <form action="{% url 'sale_index' %}" method="POST">
+        {% csrf_token %}
+    <div class="col-md-4">
+      <input type="date" required id="date" style='width:250px;display:inline;' size="16" class="form-control" name='date'>
+        <button class="btn btn-primary" id="button">View</button>
+    </div>
+    </form>
+
+</div><br><br>{%endblock %}
+{% block 'sub_page_name' %} Index {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'main_content' %}
+          <div class="col-lg-12">
+            <section class="panel">
+              <header class="text-center panel-heading">
+                <h3 class='text-center'>SALES MADE ON {{ date }} </h3>
+              </header>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class='text-center'>S/N</th>
+                      <th class='text-center'>Invoice No</th>
+					  <th class='text-center'>Customer name</th>
+                      <th class='text-center'>Product(s)</th>
+                      <th class='text-center'>Unit price (N)</th>
+                      <th class='text-center'>Quantity(s)</th>
+					  <th class='text-center'>Total Price(s)</th>
+					  <th class='text-center'>Grand Total</th>
+					  <th class='text-center'>Balance</th>
+                        <th class='text-center'>Attendant</th>
+                      <th class='text-center'>More Details</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sales">
+                  {% if sale_list %}
+                  {% for sale in sale_list %}
+                    <tr style='border-bottom:2px solid black;'>
+                      <td class='text-center'>{{ forloop.counter }}</td>
+                      <td style='font-family:courier;' class=''>INV-{{ sale.sale_id }}</td>
+                      <td class=''>{% if sale.client_type == 'customer' %} {{ sale.customer|title }} (C) {% elif sale.client_type == 'sale_rep' %} {{ sale.sale_rep|title }} (SR) {% else %} {% if sale.client_detail %} {{ sale.client_detail|title }} {% else %} {{ 'anonymous'|title }} {% endif %}{% endif %}</td>
+                      <td>
+						<ul>
+							{% for sale_detail in sale_detail_list %}
+                                {% if sale.sale_id == sale_detail.sale_id %}
+							        <li>{{ sale_detail }}</li>
+                                {% endif %}
+                            {% endfor %}
+							<li><br></li>
+						</ul>
+					  </td>
+                      <td>
+						<ul>
+							{% for sale_detail in sale_detail_list %}
+                                {% if sale.sale_id == sale_detail.sale_id %}
+							        <li>{{ sale_detail.unit_selling_price }}</li>
+                                {% endif %}
+                            {% endfor %}
+						</ul>
+					  </td>
+					  <td>
+						<ul>
+							{% for sale_detail in sale_detail_list %}
+                                {% if sale.sale_id == sale_detail.sale_id %}
+							        <li>{{ sale_detail.quantity }}</li>
+                                {% endif %}
+                            {% endfor %}
+						</ul>
+					  </td>
+                      <td>
+						<ul>
+							{% for sale_detail in sale_detail_list %}
+                                {% if sale.sale_id == sale_detail.sale_id %}
+							        <li>{{ sale_detail.total_price }}</li>
+                                {% endif %}
+                            {% endfor %}
+						</ul>
+					  </td>
+                      <td class='text-center'>{{ sale.grand_total }}</td>
+                      <td class='text-center'>{{ sale.current_balance }}</td>
+                        <td class='text-center'>{{ sale.created_by|title }}</td>
+                      <td class='text-center'>
+                          <a class='btn btn-primary'  href="{% url 'sale_detail' sale.sale_id %}">View</a>
+                          <a class='btn btn-primary' {% if sale.client_type != "sale_rep" %}  href="{% url 'sale_edit' sale.sale_id %}" {% else %} href="{% url 'sale_rep_sale_edit' sale.sale_id %}" {% endif %}>Edit</a>
+                          <a class='btn btn-success' href="{% url 'sale_print_receipt' sale.sale_id %}">Print</a>
+                      </td>
+                    </tr>
+
+                  {% endfor %}
+                  {% else %}
+                    <tr><td colspan=10><h2 class='text-center'>NO SALE MADE </h2><td><tr>
+                  {% endif %}
+
+
+                  </tbody>
+                </table>
+              </div>
+
+            </section>
+          </div>
+        </div>
+    <script src="http://localhost/inventory-management/public/js/jquery.js"></script>
+    <script type='text/javascript'>
+
+$(document).ready(function(){
+    $('#date').change(function(){
+        date = $(this).val()
+        year = date[0] + date[1] + date[2] + date[3]
+        month = date[5] + date[6]
+        day = date[8] + date[9]
+        date = year + ' ' + month + ' ' + day
+        url_prefix = "{% url 'sale_date_index' "
+        url_postfix = " %}"
+        url = url_prefix + date + url_postfix
+
+    })
+  $('#message').hide();
+	setTimeout(function(){
+			$('.text-error').fadeOut('slow')
+    }, 5000)
+
+
+	})
+
+
+</script>
+{%endblock %}
