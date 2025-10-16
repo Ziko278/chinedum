@@ -1,0 +1,149 @@
+{% extends 'admin_layout.html' %}
+{% block 'page_name' %} Sale {%endblock %}
+{% block 'sub_page_name' %} Debtors {%endblock %}
+{% load static %}
+{% block extra_script %}
+<!-- ======= EXTRA SCRIPT GOES IN HERE ======= -->
+<script src="{% static 'sparrow_admin/scripts/custom/registration/staff.js' %}"></script>
+{% endblock %}
+{% block 'main_content' %}
+{% if debtor_type == 'customer' %}
+<div class="col-lg-12">
+    <section class="panel"><br>
+        <header class="panel-heading text-center">
+            <h3 class='text-center'>CUSTOMER DEBTORS TABLE</h3>
+        </header>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th class='text-center'>#</th>
+                      <th class=''>Customer name</th>
+                      <th class='text-center'>Amount Owed (N) </th>
+                      <th class='text-center'>Crate Owed</th>
+                      <th class='text-center'>Phone Number</th>
+                      <th class='text-center'>More Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% if debtor_list %}
+                  {% for debtor in debtor_list %}
+                  <tr>
+                      <td class='text-center'>{{ forloop.counter}}</td>
+                      <td class=''>{{ debtor.full_name|title }}</td>
+                      <td class='text-center'>{{ debtor.balance }}</td>
+                      <td class='text-center'>{{ debtor.crate_balance }}</td>
+                      <td class='text-center'><b> {% if debtor.mobile %}{{ debtor.mobile }} {% endif %}</b></td>
+                      <td class='text-center'>
+                          <a class="btn btn-primary" href="{% url 'customer_sale_transaction' debtor.id  'customer' %}">Transactions</a>
+                          <a class="btn btn-success" href="{% url 'sale_debtor_payment' debtor.id  'customer' %}">Pay Debt</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  {% else %}
+                  <tr><td colspan=7><h2 class='text-center'>NO CURRENT DEBTOR </h2><td><tr>
+                      {% endif %}
+                  </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+
+{% elif debtor_type == 'sale_rep' %}
+<div class="col-lg-12">
+    <section class="panel"><br>
+        <header class="panel-heading text-center">
+            <h3 class='text-center'>SALE REP DEBTORS TABLE</h3>
+        </header>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th class='text-center'>#</th>
+                      <th class=''>Sale Rep name</th>
+                      <th class='text-center'>Amount Owed (N) </th>
+                      <th class='text-center'>Crate Owed</th>
+                      <th class='text-center'>Phone Number</th>
+                      <th class='text-center'>More Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% if debtor_list %}
+                  {% for debtor in debtor_list %}
+                  <tr>
+                      <td class='text-center'>{{ forloop.counter}}</td>
+                      <td class=''>{{ debtor.full_name }}</td>
+                      <td class='text-center'>{{ debtor.credit }}</td>
+                      <td class='text-center'>{{ debtor.crate_credit }}</td>
+                      <td class='text-center'> {% if debtor.mobile %} {{ debtor.mobile }} {% endif %} </td>
+                      <td class='text-center'>
+                          {% if request.user.account.staff.position != 'staff' %}
+                          <a class="btn btn-primary" href="{% url 'customer_sale_transaction' debtor.id  'sale_rep' %}">Transactions</a>
+                            {% endif %}
+                          <a class="btn btn-success" href="{% url 'sale_debtor_payment' debtor.id  'sale_rep' %}">Pay Debt</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  {% else %}
+                  <tr><td colspan=7><h2 class='text-center'>NO CURRENT DEBTOR </h2><td><tr>
+                      {% endif %}
+                  </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+
+{% else %}
+<div class="col-lg-12">
+    <section class="panel"><br>
+        <header class="panel-heading text-center">
+            <h3 class='text-center'>UNREGISTERED CLIENT DEBTORS TABLE</h3>
+        </header>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th class='text-center'>#</th>
+                      <th class='text-center'>Client name</th>
+                      <th class='text-center'>Total Price (N) </th>
+                      <th class='text-center'>Amount Paid (N)</th>
+                      <th class='text-center'>Balance (N)</th>
+                      <th class='text-center'>Attendant</th>
+                      <th class='text-center'>Date</th>
+                      <th class='text-center'>More Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% if debtor_list %}
+                  {% for debtor in debtor_list %}
+                  <tr>
+                      <td class='text-center'>{{ forloop.counter}}</td>
+                      <td class=''>{% if debtor.client_detail %} {{ debtor.client_detail|title }} {% else %} Anonymous {% endif %}</td>
+                      <td class='text-center'>{{ debtor.grand_total }}</td>
+                      <td class='text-center'>{{ debtor.amount_paid }}</td>
+                      <td class='text-center'><b>{{ debtor.current_balance }}</b></td>
+                      <td class='text-center'>{{ debtor.created_by|title }}</td>
+                      <td class='text-center'>{{ debtor.created_at|date }}</td>
+                      <td class='text-center'>
+                          <a href="{% url 'sale_detail' debtor.sale_id %}" class="btn btn-primary">View</a>
+                          {% if request.user.account.staff.position != 'staff' %}
+
+                          <a href="{% url 'sale_debtor_payment' debtor.id  'client' %}" class="btn btn-success">Pay Debt</a>
+                            {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  {% else %}
+                  <tr><td colspan=7><h2 class='text-center'>NO CURRENT DEBTOR </h2><td><tr>
+                      {% endif %}
+                  </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+
+{% endif %}
+{%endblock %}
