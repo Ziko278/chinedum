@@ -87,7 +87,10 @@
                         <td class='text-center'>{{ sale.created_by|title }}</td>
                       <td class='text-center'>
                           <a class='btn btn-primary'  href="{% url 'sale_detail' sale.sale_id %}">View</a>
+
+                          {% if request.user.account.staff.position != 'staff' %}
                           <a class='btn btn-primary' {% if sale.client_type != "sale_rep" %}  href="{% url 'sale_edit' sale.sale_id %}" {% else %} href="{% url 'sale_rep_sale_edit' sale.sale_id %}" {% endif %}>Edit</a>
+                          {% endif %}
                           <a class='btn btn-success' href="{% url 'sale_print_receipt' sale.sale_id %}">Print</a>
                       </td>
                     </tr>
@@ -105,7 +108,7 @@
             </section>
           </div>
         </div>
-    <script src="http://localhost/inventory-management/public/js/jquery.js"></script>
+    <script src="{% static 'scripts/jquery.js' %}"></script>
     <script type='text/javascript'>
 
 $(document).ready(function(){

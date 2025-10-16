@@ -10,7 +10,7 @@
   <meta name="keyword" content="Drink, Software">
   <link rel="shortcut icon" href="img/favicon.png">
 
-  <title>CHINEDUM ENTERPRISE</title>
+  <title>CHINEDUM DM ENTERPRISE ONLINE</title>
   <link href="{% static 'styles/bootstrap.min.css' %}" rel="stylesheet">
 
   <link href="{% static 'styles/elegant-icons-style.css' %}" rel="stylesheet" />
@@ -48,7 +48,7 @@
       </div>
 
       <!--logo start-->
-      <a href="" class="logo">CHINEDUM <span class="lite">ENTERPRISE</span></a>
+      <a href="" class="logo">CHINEDUM DM <span class="lite">ENTERPRISE</span></a>
       <!--logo end-->
 
     <div class="top-nav notification-row">
@@ -72,7 +72,7 @@
               <li>
                 <p class="blue"> {{ no_of_low_stock }} low inventory </p>
               </li>
-              {% for stock in lo_stock_list %}
+              {% for stock in low_stock_list %}
 			  <li>
                 <a href="{% url 'inventory_detail' stock.id %}">
                     <span class="subject">
@@ -142,6 +142,7 @@
             </a>
           </li>
 
+          {% if request.user.account.staff.position != 'staff' %}
           <li class="sub-menu">
             <a href="javascript:;" class="">
               <i class="fa fa-envelope"></i>
@@ -155,6 +156,7 @@
               <li><a class="" href="{% url 'today_statistic_report' %}">Statistic</a></li>
             </ul>
           </li>
+          {% endif %}
 
 		  <li class="sub-menu">
             <a href="javascript:;" class="">

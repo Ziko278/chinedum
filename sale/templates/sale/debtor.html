@@ -78,7 +78,9 @@
                       <td class='text-center'>{{ debtor.crate_credit }}</td>
                       <td class='text-center'> {% if debtor.mobile %} {{ debtor.mobile }} {% endif %} </td>
                       <td class='text-center'>
+                          {% if request.user.account.staff.position != 'staff' %}
                           <a class="btn btn-primary" href="{% url 'customer_sale_transaction' debtor.id  'sale_rep' %}">Transactions</a>
+                            {% endif %}
                           <a class="btn btn-success" href="{% url 'sale_debtor_payment' debtor.id  'sale_rep' %}">Pay Debt</a>
                       </td>
                     </tr>
