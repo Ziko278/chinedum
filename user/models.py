@@ -5,6 +5,6 @@ from staff.models import StaffModel
 
 # Create your models here.
 class UserRoleModel(models.Model):
-    user = models.OnetoOneField(User, on_delete=models.CASCADE, related_name='account')
-    staff = models.OnetoOneField(StaffModel, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account')
+    staff = models.OneToOneField(StaffModel, on_delete=models.CASCADE, null=True, blank=True)
     role = models.CharField(max_length=100)
