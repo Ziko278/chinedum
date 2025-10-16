@@ -129,6 +129,7 @@
                       <td class='text-center'>
                           <a href="{% url 'sale_detail' debtor.sale_id %}" class="btn btn-primary">View</a>
                           {% if request.user.account.staff.position != 'staff' %}
+                          
                           <a href="{% url 'sale_debtor_payment' debtor.id  'client' %}" class="btn btn-success">Pay Debt</a>
                             {% endif %}
                       </td>
