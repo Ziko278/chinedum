@@ -70,9 +70,11 @@
             <ul class="dropdown-menu extended inbox">
               <div class="notify-arrow notify-arrow-blue"></div>
               <li>
-                <p class="blue"> {{ no_of_low_stock }} low inventory </p>
+                <p class="blue"> {{ no_of_low_stock }} low inventory</p>
               </li>
+
               {% for stock in low_stock_list %}
+              {% if no_of_low_stock > 0 %}
 			  <li>
                 <a href="{% url 'inventory_detail' stock.id %}">
                     <span class="subject">
@@ -81,6 +83,7 @@
                     </span>
                 </a>
               </li>
+              {% endif %}
 			  {% endfor %}
 
             </ul>

@@ -55,7 +55,7 @@
             <form action="" method="POST">
                 {% csrf_token %}
                 <div class="table-responsive">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="customer-search">Search Customer </label><span id='clear-customer' style='font-size:20px;float:right;color:red'><b><i style='font-size:25px' class='fa fa-close'></i></b></span>
                         <input type="hidden" id="customer_list" value="{{ customer_list }}">
                         <input type="hidden" name="user" value="{{ layout_user.id }}">
@@ -69,9 +69,13 @@
                         <input type="hidden" id="client-type" name="client_type" value="guest" />
                         <input type="hidden" id="customer" name="customer" value="">
                     </div>
-					<div class="form-group col-md-3">
+					<div class="form-group col-md-2">
                         <label for="customer-balance"><b>Previous Balance</b></label>
                         <input type="text"  value=""  class="form-control" id="prev-balance" name='prev_balance' readonly placeholder="">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="customer-create"><b>Crate Balance</b></label>
+                        <input type="text"  value=""  class="form-control" id="prev-crate" name='prev_crate' readonly placeholder="">
                     </div>
                 <table class="table">
                   <thead>
@@ -220,7 +224,9 @@
             $('#customer-detail').val(customer_fullname.toUpperCase())
 
             customer_previous_balance = customer_full_detail['balance']
+            customer_crate_balance = customer_full_detail['crate_balance']
             $('#prev-balance').val(customer_previous_balance)
+            $('#prev-crate').val(customer_crate_balance)
             $('#customer').val(customer_id)
         })
 
