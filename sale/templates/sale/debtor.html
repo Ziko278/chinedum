@@ -36,9 +36,7 @@
                       <td class='text-center'><b> {% if debtor.mobile %}{{ debtor.mobile }} {% endif %}</b></td>
                       <td class='text-center'>
                           <a class="btn btn-primary" href="{% url 'customer_sale_transaction' debtor.id  'customer' %}">Transactions</a>
-<!--                         {% if request.user.account.staff.position != 'staff' %}-->
                           <a class="btn btn-success" href="{% url 'sale_debtor_payment' debtor.id  'customer' %}">Pay Debt</a>
-<!--                            {% endif %}-->
                         </td>
                     </tr>
                   {% endfor %}
@@ -130,10 +128,8 @@
                       <td class='text-center'>{{ debtor.created_at|date }}</td>
                       <td class='text-center'>
                           <a href="{% url 'sale_detail' debtor.sale_id %}" class="btn btn-primary">View</a>
-                          {% if request.user.account.staff.position != 'staff' %}
 
                           <a href="{% url 'sale_debtor_payment' debtor.id  'client' %}" class="btn btn-success">Pay Debt</a>
-                            {% endif %}
                       </td>
                     </tr>
                   {% endfor %}
